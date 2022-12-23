@@ -1,0 +1,46 @@
+.navigation-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+}
+
+.navigation-container a {
+    text-decoration: none;
+    color: #041F4C;
+}
+
+.nav-info {
+    display: flex;
+    margin-bottom: 24px;
+}
+
+.nav-page-name {
+    flex-grow: 1;
+    font-size: 32px;
+    color: #041F4C;
+}
+
+.nav-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.nav-buttons a {
+    margin: 4px;
+}
+
+.navbar {
+  display: flex;
+  gap: 1rem;
+  flex-grow: 1;
+  font-size: 16px;
+  align-items: center;
+} 
+
+.nav-and-search {
+    display: flex;
+}
+
+.nav-and-search input {
+    width: 100%;
+}

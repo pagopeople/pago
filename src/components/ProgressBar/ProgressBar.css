@@ -1,0 +1,23 @@
+.progress-bars {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+}
+.progress-bar-container {
+    background-color: lightblue;
+    height: 24px;
+    border-radius: 5px;
+}
+
+.progress-bar-progress {
+    background-color: darkblue;
+    height: 100%;
+    border-radius: inherit;
+}
+
+.progress-bar-description {
+    color: darkblue;
+    font-weight: 600;
+    font-size: 22px;
+    text-align: center;
+}

@@ -1,0 +1,27 @@
+.pbd-container {
+    border-radius: 3px;
+    border-color: lightblue;
+    border-style: solid;
+    padding: 12px;
+    display: flex;
+}
+
+.pbd-text {
+    display: flex;
+    align-items: center;
+    color: darkblue;
+    font-weight: 700;
+    font-size: 24px;
+    max-width: 28%;
+    word-wrap: break-word;
+    line-height: 28px;
+}
+
+.pbd-help {
+    display: flex;
+    align-items: center;
+}
+
+.pbd-help-link {
+    font-size: 12px;
+}

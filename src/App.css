@@ -1,8 +1,15 @@
 .App {
-  padding: 24px;
+  padding: 24px 60px;
   font-family: "Work Sans", sans-serif;
   margin: auto;
-  max-width: 90%;
+  margin-top: 0;
+  margin-bottom: 0;
+  max-width: 80%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  border: 1px solid #041F4C;
+  box-sizing: border-box;
 }
 
 .App-logo {

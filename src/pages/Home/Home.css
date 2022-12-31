@@ -1,0 +1,9 @@
+.home-container {
+    display: flex;
+    padding-top: 32px;
+}
+
+.home-row {
+    display: flex;
+    flex-grow: 1;
+}

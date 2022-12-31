@@ -4,19 +4,19 @@
     flex-direction: column;
 }
 .progress-bar-container {
-    background-color: lightblue;
-    height: 24px;
-    border-radius: 5px;
+    background-color: #75B2E2;
+    height: 16px;
+    border-radius: 7px;
 }
 
 .progress-bar-progress {
-    background-color: darkblue;
+    background-color: #041F4C;
     height: 100%;
     border-radius: inherit;
 }
 
 .progress-bar-description {
-    color: darkblue;
+    color: #041F4C;
     font-weight: 600;
     font-size: 22px;
     text-align: center;

@@ -30,7 +30,7 @@ export default function Home() {
                     mainText='Pay Dashboard' 
                     subText='See how much you are paid and where you are on your pay band'
                 >
-                    <ProgressCircle description='Total Compensation' progress={60} styles={{text: {fill: '#041F4C', fontSize: '7px'}}} />
+                    <ProgressCircle description='Total Compensation' progress={60} styles={{text: {fill: '#041F4C', fontSize: '7px', fontWeight: 600}}} />
                 </HomeWidget>
                 
             </div>

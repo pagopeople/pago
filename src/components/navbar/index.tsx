@@ -57,8 +57,14 @@ export default function Navbar() {
                         <NavLink to="career">
                             <span>Career</span>
                         </NavLink> 
-                        <NavLink to="other">
-                            <span>Other Dashboards</span>
+                        <NavLink to="skills">
+                            <span>Skills</span>
+                        </NavLink>
+                        <NavLink to="improvement">
+                            <span>Improvement</span>
+                        </NavLink>
+                        <NavLink to="managers">
+                            <span>Managers</span>
                         </NavLink> 
                     </nav>
                     <Search />

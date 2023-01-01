@@ -18,6 +18,7 @@
     flex-grow: 1;
     font-size: 32px;
     color: #041F4C;
+    font-family: 'Playfair Display';
 }
 
 .nav-buttons {
@@ -26,7 +27,7 @@
 }
 
 .nav-buttons a {
-    margin: 4px;
+    margin: 0 12px;
 }
 
 .navbar {
@@ -43,4 +44,13 @@
 
 .nav-and-search input {
     width: 100%;
+}
+
+.nav-buttons span {
+    display: flex;
+    align-items: center;
+}
+
+.nav-buttons svg {
+    margin-right: 8px;
 }

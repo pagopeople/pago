@@ -20,6 +20,9 @@ import Goals from './pages/Goals';
 import Navbar from './components/navbar';
 import Reviews from './pages/Reviews';
 import Account from './pages/Account';
+import Skills from './pages/Skills';
+import Improvement from './pages/Improvement';
+import Managers from './pages/Managers';
 
 const router =  createBrowserRouter(
   createRoutesFromElements(
@@ -34,6 +37,9 @@ const router =  createBrowserRouter(
       <Route path="/reviews" element={<Reviews />} />
       <Route path="/account" element={<Account />} />
       <Route path="/logout" element={<div>Logout</div>} />
+      <Route path="/skills" element={<Skills />} />
+      <Route path="/improvement" element={<Improvement />} />
+      <Route path="/managers" element={<Managers />} />
       <Route path="*" element={<div>404</div>} />
     </Route>
   )

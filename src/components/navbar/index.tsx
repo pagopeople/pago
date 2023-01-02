@@ -1,15 +1,14 @@
 import React, { useEffect } from 'react';
 import { NavLink, Outlet, useLocation, Link } from 'react-router-dom';
 import Search from '../Search';
+import { GiOnTarget } from 'react-icons/gi';
+import { MdOutlineReviews } from 'react-icons/md';
+import { IoPerson } from 'react-icons/io5';
 
 import './Navbar.css';
 
 export default function Navbar() {
     const location = useLocation();
-
-    useEffect(() => {
-        console.log(location);
-    },[]);
 
     const getPageName = () => {
         if (location.pathname === "/") {
@@ -27,13 +26,13 @@ export default function Navbar() {
                     </div>
                     <div className="nav-buttons">
                         <Link to="goals">
-                            <span>Goals</span>
+                            <span><GiOnTarget />Goals</span>
                         </Link>
                         <Link to="reviews">
-                            <span>Reviews</span>
+                            <span><MdOutlineReviews/>Reviews</span>
                         </Link>
                         <Link to="account">
-                            <span>Account</span>
+                            <span><IoPerson />Account</span>
                         </Link>
                         <Link to="logout">
                             <span>Log out</span>
@@ -57,8 +56,14 @@ export default function Navbar() {
                         <NavLink to="career">
                             <span>Career</span>
                         </NavLink> 
-                        <NavLink to="other">
-                            <span>Other Dashboards</span>
+                        <NavLink to="skills">
+                            <span>Skills</span>
+                        </NavLink>
+                        <NavLink to="improvement">
+                            <span>Improvement</span>
+                        </NavLink>
+                        <NavLink to="managers">
+                            <span>Managers</span>
                         </NavLink> 
                     </nav>
                     <Search />

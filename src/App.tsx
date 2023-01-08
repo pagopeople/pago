@@ -15,7 +15,7 @@ import OtherDashboards from './pages/OtherDashboards';
 import Pay from './pages/Pay';
 import Performance from './pages/Performance';
 import Goals from './pages/Goals';
-import Navbar from './components/navbar';
+import AppContainer from './components/AppContainer';
 import Reviews from './pages/Reviews';
 import Account from './pages/Account';
 import Skills from './pages/Skills';
@@ -27,7 +27,7 @@ import './App.css';
 
 const router =  createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Navbar />} >
+    <Route path="/" element={<AppContainer />} >
       <Route index element={<Home />} />
       <Route path='/employee' element={<EmployeeDashboard />}  />
       <Route path="/pay"  element={<Pay />} />

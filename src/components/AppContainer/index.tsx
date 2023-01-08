@@ -66,7 +66,7 @@ export default function AppContainer() {
             if (userRef.current) {
                 userRef.current.signOut();
             }
-            window.location.href = "https://pagopeople.auth.us-west-2.amazoncognito.com/login?client_id=7j9ia5g0m389dgs9j2j6nnlqqd&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=" + window.location.origin + "/";
+            window.location.href = "https://pagopeople.auth.us-west-2.amazoncognito.com/login?client_id=7j9ia5g0m389dgs9j2j6nnlqqd&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=" + getRedirectUri();
         }
     }, [sessionState.authState])
 
@@ -100,13 +100,17 @@ export default function AppContainer() {
             const exchangeRequest: ExchangeCodeRequest = {
                 clientId: configState.config?.userPoolClientId || '',
                 code: authCode,
-                redirectUrl: 'http://localhost:3000/',
+                redirectUrl: getRedirectUri(),
             }
             dispatch(exchangeCodeForTokenAsync(exchangeRequest))
         } else {
             console.log("No user and no auth code. Need to send them to sign in page")
             dispatch(setAuthState(AuthState.UNAUTHENTICATED));
         }
+    }
+
+    const getRedirectUri = () => {
+        return window.location.origin + "/";
     }
 
     return (

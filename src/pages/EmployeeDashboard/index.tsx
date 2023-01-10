@@ -12,6 +12,7 @@ export default function EmployeeDashboard() {
         <div className="employee-dashboard-container">
             <DataPointDescriptive
                 description='Performance'
+                subtext='Your weighted reviews over time'
                 helpLink='What is driving your score?'
                 onHelpLinkClick={() => console.log("help clicked")}
             >
@@ -19,6 +20,7 @@ export default function EmployeeDashboard() {
             </DataPointDescriptive>
             <DataPointDescriptive
                 description='Your pay'
+                subtext='Against your level in your area'
                 helpLink='What goes into my pay (and how do I get more)?'
                 onHelpLinkClick={() => console.log("help clicked")}
             >
@@ -26,6 +28,7 @@ export default function EmployeeDashboard() {
             </DataPointDescriptive>
             <DataPointDescriptive
                 description='Raise Cycle'
+                subtext='Your company budgets in raises for high performers at specfic times'
                 helpLink='How do I qualify for a raise?'
                 onHelpLinkClick={() => console.log("raise cycle clicked")}
             >
@@ -67,7 +70,7 @@ export default function EmployeeDashboard() {
                             <ProgressCircle description='3.4' progress={56} styles={{text: {fill: '#041F4C', fontSize: '24px', fontWeight: 600}}} />
                         </HomeWidget>
                         <HomeWidget 
-                            mainText='Prep and Present Quarterly Report'
+                            mainText='Present Quarterly Report'
                             subText='' 
                         >
                             <ProgressCircle description='4.5' progress={90} styles={{text: {fill: '#041F4C', fontSize: '24px', fontWeight: 600}}} />

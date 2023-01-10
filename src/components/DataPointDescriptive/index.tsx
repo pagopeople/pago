@@ -3,7 +3,8 @@ import "./DataPointDescriptive.css";
 
 
 interface Props {
-    description?: string, 
+    description?: string,
+    subtext?: string,
     helpLink?: string,
     onHelpLinkClick?: () => void,
     children: React.ReactNode,
@@ -12,13 +13,15 @@ interface Props {
 export default function DataPointDescriptive(props: Props ) {
     const {
         description,
+        subtext,
         helpLink,
         onHelpLinkClick,
-        children
+        children,
     } = props;
     return (<div className="dpd-container">
         {description && <div className="dpd-text">
-            {description}
+            <span>{description}</span>
+            {subtext !== undefined && <span className='dpd-text-subtext'>{subtext}</span>}
         </div>}
         <div className="dpd-children">
             {children}

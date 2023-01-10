@@ -1,13 +1,10 @@
-.pbd-container {
-    border-radius: 3px;
-    border-color: lightblue;
-    border-style: solid;
-    padding: 12px;
+.dpd-container {
+    padding: 16px;
     display: flex;
     flex-grow: 1;
 }
 
-.pbd-text {
+.dpd-text {
     display: flex;
     align-items: center;
     color: darkblue;
@@ -19,7 +16,11 @@
     padding: 16px;
 }
 
-.pbd-help {
+.dpd-children {
+    flex-grow: 1;
+}
+
+.dpd-help {
     display: flex;
     align-items: center;
     width: 25%;
@@ -29,10 +30,10 @@
     padding: 16px;
 }
 
-.pbd-help:hover {
+.dpd-help:hover {
     cursor: pointer;
 }
 
-.pbd-help-link {
+.dpd-help-link {
     font-size: 12px;
 }

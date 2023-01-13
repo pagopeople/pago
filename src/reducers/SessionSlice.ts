@@ -33,7 +33,6 @@ export const sessionSlice = createSlice({
             state.authState = action.payload.user === null ? AuthState.UNAUTHENTICATED : AuthState.AUTHENTICATED;
         },
         updateUserFromCachedSession: (state, action) => {
-            console.log(action);
             const idTokenPayload = action.payload.idToken.decodePayload();
             state.loadState = LoadState.LOADED;
             state.authState = AuthState.AUTHENTICATED;
@@ -67,8 +66,6 @@ export const sessionSlice = createSlice({
                 givenName: idTokenPayload.given_name,
                 familyName: idTokenPayload.family_name,
             }
-            console.log(action.payload);
-            console.log(idTokenPayload);
           })
           .addCase(exchangeCodeForTokenAsync.rejected, (state, action) => {
             state.loadState = LoadState.ERROR;

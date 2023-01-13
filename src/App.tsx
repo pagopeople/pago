@@ -23,6 +23,7 @@ import Improvement from './pages/Improvement';
 import Managers from './pages/Managers';
 
 import './App.css';
+import ReviewEdit from './pages/ReviewEdit';
 
 
 const router =  createBrowserRouter(
@@ -41,6 +42,7 @@ const router =  createBrowserRouter(
       <Route path="/skills" element={<Skills />} />
       <Route path="/improvement" element={<Improvement />} />
       <Route path="/managers" element={<Managers />} />
+      <Route path="/reviews/new" element={<ReviewEdit />} />
       <Route path="*" element={<div>404</div>} />
     </Route>
   )

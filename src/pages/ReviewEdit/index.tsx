@@ -1,17 +1,21 @@
-import React, {useState} from 'react';
+import React, {useState, ChangeEvent} from 'react';
 import BinaryWithFollowUp from '../../components/BinaryWithFollowUp';
 import ChoiceList from '../../components/ChoiceList';
-import { ProjectSize } from '../../types';
+import { useAppSelector } from '../../hooks';
+import { ProjectSize, Review } from '../../types';
 
 import './ReviewEdit.css';
 
 export default function ReviewEdit() {
+    const reviewsState = useAppSelector((state) => state.reviewsState);
 
     const [hasDeadline, setHadDeadline] = useState<boolean | undefined>(undefined)
     const [deadlineVal, setDeadlineVal] = useState('');
     const optionsOneToTen = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    const [selectedMatchIdx, setSelectedMatchIdx] = useState<number | undefined>();
-
+    const [selectedVal, setSelectedVal] = useState<string | number | undefined>();
+    const [review, setReview] = useState<Review | undefined>(reviewsState.activeReview);
+    
+    
     const getProjectSizeOptions = () => {
         const options:React.ReactNode[] = [];
         for (const ps in ProjectSize) {
@@ -29,30 +33,41 @@ export default function ReviewEdit() {
                 <div>
                     What is the project called?
                 </div>
-                <input type='text'/>
+                <input 
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setReview({...review, projectName: e.currentTarget.value})}
+                    value={review?.projectName} 
+                    type='text'
+                />
             </div>
             <div>
                 <div>
                     Brief description of the project
                 </div>
-                <textarea cols={50}/>
+                <textarea
+                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setReview({...review, projectDescription: e.currentTarget.value})}
+                    value={review?.projectDescription}
+                    cols={50}
+                />
             </div>
             <div>
                 <div>
                     What company goal does this project work towards?
                 </div>
-                <select>
+                <select value={review?.companyGoal} onChange={(e: any) => setReview({...review, companyGoal: e.currentTarget.value})}>
                     <option value='Goal1'>The promotion goal</option>
-                    <option value='Goal1'>The demotion goal</option>
-                    <option value='Goal1'>The ipo goal</option>
-                    <option value='Goal1'>The bankrupt goal</option>
+                    <option value='Goal2'>The demotion goal</option>
+                    <option value='Goal3'>The ipo goal</option>
+                    <option value='Goal4'>The bankrupt goal</option>
                 </select>
             </div>
             <div>
                 <div>
                     How big of a project is this?
                 </div>
-                <select>
+                <select 
+                    value={ProjectSize[review?.projectSize || ProjectSize.SMALL]} 
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) => setReview({...review, projectSize: ProjectSize[e.currentTarget.value as keyof typeof ProjectSize]})}
+                >
                     {getProjectSizeOptions()}
                 </select>
             </div>
@@ -60,7 +75,11 @@ export default function ReviewEdit() {
                 <div>
                     How many hours did this project take?
                 </div>
-                <input type='number' />
+                <input 
+                    value={review?.hoursSpent}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setReview({...review, hoursSpent: Number(e.currentTarget.value)})}  
+                    type='number' 
+                />
             </div>
             <div>
                 <div>
@@ -70,10 +89,10 @@ export default function ReviewEdit() {
                     trueText='Yes'
                     falseText='No'
                     inputPlaceholder='If Yes, enter deadline'
-                    selected={hasDeadline}
-                    onSelectedUpdate={setHadDeadline}
-                    onInputUpdate={setDeadlineVal}
-                    followUpValue={deadlineVal}
+                    selected={review?.deadline}
+                    onSelectedUpdate={(deadline: boolean) => setReview({...review, deadline})}
+                    onInputUpdate={(deadlineDate: string) => setReview({...review, deadlineDate: 123})}
+                    followUpValue={'in progress'}
                 />
             </div>
             <div>
@@ -84,10 +103,10 @@ export default function ReviewEdit() {
                     trueText='Yes'
                     falseText='No'
                     inputPlaceholder='If No, what happened?'
-                    selected={hasDeadline}
-                    onSelectedUpdate={setHadDeadline}
-                    onInputUpdate={setDeadlineVal}
-                    followUpValue={deadlineVal}
+                    selected={review?.onSchedule}
+                    onSelectedUpdate={(onSchedule: boolean) => setReview({...review, onSchedule})}
+                    onInputUpdate={(onScheduleReason: string) => setReview({...review, onScheduleReason})}
+                    followUpValue={review?.onScheduleReason}
                 />
             </div>
             <div>
@@ -98,8 +117,8 @@ export default function ReviewEdit() {
                     startHint={'Not close'}
                     endHint={'Exactly what was needed'}
                     options={optionsOneToTen}
-                    selectedIdx={selectedMatchIdx}
-                    onSelectedIdxChange={setSelectedMatchIdx} 
+                    selectedVal={review?.matchScore}
+                    onSelectedValChange={(val: string | number) => setReview({...review, matchScore: val as number})} 
                 />
             </div>
             <div>
@@ -110,8 +129,8 @@ export default function ReviewEdit() {
                     startHint={'Mud'}
                     endHint={'Crystal'}
                     options={optionsOneToTen}
-                    selectedIdx={selectedMatchIdx}
-                    onSelectedIdxChange={setSelectedMatchIdx} 
+                    selectedVal={review?.clarityScore}
+                    onSelectedValChange={(val: string | number) => setReview({...review, clarityScore: val as number})} 
                 />
             </div>
             <div>
@@ -122,8 +141,8 @@ export default function ReviewEdit() {
                     startHint={'A lot'}
                     endHint={'None'}
                     options={optionsOneToTen}
-                    selectedIdx={selectedMatchIdx}
-                    onSelectedIdxChange={setSelectedMatchIdx} 
+                    selectedVal={review?.errorsScore}
+                    onSelectedValChange={(val: string | number) => setReview({...review, errorsScore: val as number})} 
                 />
             </div>
             <div>
@@ -134,8 +153,8 @@ export default function ReviewEdit() {
                     startHint={'Not involved'}
                     endHint={'Constantly involved'}
                     options={optionsOneToTen}
-                    selectedIdx={selectedMatchIdx}
-                    onSelectedIdxChange={setSelectedMatchIdx} 
+                    selectedVal={review?.managerInvolvementScore}
+                    onSelectedValChange={(val: string | number) => setReview({...review, managerInvolvementScore: val as number})} 
                 />
             </div>
             <div>
@@ -146,8 +165,8 @@ export default function ReviewEdit() {
                     startHint={'Not involved'}
                     endHint={'Constantly involved'}
                     options={optionsOneToTen}
-                    selectedIdx={selectedMatchIdx}
-                    onSelectedIdxChange={setSelectedMatchIdx} 
+                    selectedVal={review?.desiredManagerInvolvementScore}
+                    onSelectedValChange={(val: string | number) => setReview({...review, desiredManagerInvolvementScore: val as number})}  
                 />
             </div>
             <div>
@@ -158,19 +177,21 @@ export default function ReviewEdit() {
                     startHint={'Not Enough'}
                     endHint={'Way too much'}
                     options={optionsOneToTen}
-                    selectedIdx={selectedMatchIdx}
-                    onSelectedIdxChange={setSelectedMatchIdx} 
+                    selectedVal={review?.managerInvolvmentOpinionScore}
+                    onSelectedValChange={(val: string | number) => setReview({...review, managerInvolvmentOpinionScore: val as number})}   
                 />
             </div>
             <div>
                 <div>
                     Did you work with any coworkers?
                 </div>
-                <select>
-                    <option value='Goal1'>John</option>
-                    <option value='Goal1'>Monte</option>
-                    <option value='Goal1'>Spencer</option>
-                    <option value='Goal1'>Stephen</option>
+                <select 
+                    value={review?.coworkerName} 
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) => setReview({...review, coworkerName: e.currentTarget.value})}>
+                    <option value='pago1'>John</option>
+                    <option value='pago2'>Monte</option>
+                    <option value='pago3'>Spencer</option>
+                    <option value='pago4'>Stephen</option>
                 </select>
             </div>
             <div>
@@ -181,19 +202,22 @@ export default function ReviewEdit() {
                     startHint={'Poorly'}
                     endHint={'Exceptional'}
                     options={optionsOneToTen}
-                    selectedIdx={selectedMatchIdx}
-                    onSelectedIdxChange={setSelectedMatchIdx} 
+                    selectedVal={review?.coworkerPerformance}
+                    onSelectedValChange={(val: string | number) => setReview({...review, coworkerPerformance: val as number})}   
                 />
             </div>
             <div>
                 <div>
                     What skills did you use to finish the project?
                 </div>
-                <select>
-                    <option value='Goal1'>Ninja</option>
-                    <option value='Goal1'>Knife</option>
-                    <option value='Goal1'>People</option>
-                    <option value='Goal1'>Cooking</option>
+                <select 
+                    value={review?.skillsUsed} 
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) => setReview({...review, skillsUsed: e.currentTarget.value})}
+                >
+                    <option value='skill1'>Ninja</option>
+                    <option value='skill2'>Knife</option>
+                    <option value='skill3'>People</option>
+                    <option value='skill4'>Cooking</option>
                 </select>
             </div>
             <div>
@@ -204,19 +228,22 @@ export default function ReviewEdit() {
                     startHint={'Not involved'}
                     endHint={'Constantly involved'}
                     options={optionsOneToTen}
-                    selectedIdx={selectedMatchIdx}
-                    onSelectedIdxChange={setSelectedMatchIdx} 
+                    selectedVal={review?.skillProficiency}
+                    onSelectedValChange={(val: string | number) => setReview({...review, skillProficiency: val as number})}  
                 />
             </div>
             <div>
                 <div>
                     What areas could you improve on?
                 </div>
-                <select>
-                    <option value='Goal1'>On time</option>
-                    <option value='Goal1'>Procrastination</option>
-                    <option value='Goal1'>Attention to detail</option>
-                    <option value='Goal1'>Communicating with coworkers</option>
+                <select 
+                    value={review?.improvementAreas} 
+                    onChange={(e: ChangeEvent<HTMLSelectElement>) => setReview({...review, improvementAreas: e.currentTarget.value})}
+                >
+                    <option value='area1'>On time</option>
+                    <option value='area2'>Procrastination</option>
+                    <option value='area3'>Attention to detail</option>
+                    <option value='area4'>Communicating with coworkers</option>
                 </select>
             </div>
             <button className='review-edit-submit-button'>Submit</button>

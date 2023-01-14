@@ -9,7 +9,7 @@ interface Props {
     onSelectedUpdate: (val: boolean) => void,
     onInputUpdate: (s: string) => void,
     selected: boolean | undefined,
-    followUpValue: string,
+    followUpValue?: string,
 }
 
 export default function BinaryWithFollowUp(props: Props) {

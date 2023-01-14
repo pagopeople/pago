@@ -49,6 +49,7 @@ export interface Review {
     errorsScore?: number,
     managerInvolvementScore?: number,
     desiredManagerInvolvementScore?: number,
+    managerInvolvmentOpinionScore?: number,
     withCoworker?: boolean,
     coworkerName?: string,
     coworkerPerformance?: number,

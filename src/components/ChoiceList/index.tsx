@@ -6,8 +6,8 @@ interface Props {
     startHint?: string,
     endHint?: string,
     options: Array<number | string>,
-    selectedIdx: number | undefined,
-    onSelectedIdxChange: (idx: number) => void,
+    selectedVal: number | string |  undefined,
+    onSelectedValChange: (val: string | number) => void,
 };
 
 export default function ChoiceList(props: Props) {
@@ -15,13 +15,10 @@ export default function ChoiceList(props: Props) {
         startHint,
         endHint,
         options,
-        onSelectedIdxChange,
-        selectedIdx
+        onSelectedValChange,
+        selectedVal,
     } = props;
 
-    useEffect(() => {
-        console.log('si', selectedIdx)
-    }, [selectedIdx])
     return(
         <div className='choice-list-container'>
             {startHint && <div className='choice-list-hint'>
@@ -30,9 +27,9 @@ export default function ChoiceList(props: Props) {
             {options.map((option, idx) => {
                 return(
                     <div 
-                        className={`choice-list-option${selectedIdx === idx ? " choice-list-option-active": ""}`}
+                        className={`choice-list-option${selectedVal === option ? " choice-list-option-active": ""}`}
                         key={option}
-                        onClick={() => onSelectedIdxChange(idx)}
+                        onClick={() => onSelectedValChange(option)}
                     >
                         {option}
                     </div>

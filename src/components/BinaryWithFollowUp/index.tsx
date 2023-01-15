@@ -5,27 +5,21 @@ import './BinaryWithFollowUp.css';
 interface Props {
     trueText: string,
     falseText: string,
-    inputPlaceholder: string,
     onSelectedUpdate: (val: boolean) => void,
-    onInputUpdate: (s: string) => void,
     selected: boolean | undefined,
-    followUpValue?: string,
+    children: React.ReactNode
 }
 
 export default function BinaryWithFollowUp(props: Props) {
     const {
         trueText,
         falseText,
-        inputPlaceholder,
-        onInputUpdate,
         onSelectedUpdate,
         selected,
-        followUpValue,
+        children,
     } = props;
 
-    const onInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
-        onInputUpdate(evt.currentTarget.value);
-    }
+
     return(
         <div className='binary-with-follow-up-container'>
             <div 
@@ -41,7 +35,7 @@ export default function BinaryWithFollowUp(props: Props) {
                 {falseText}
             </div>
             <div>
-                <input onChange={onInputChange} value={followUpValue} type='text' placeholder={inputPlaceholder} />
+                {children}
             </div>
 
         </div>

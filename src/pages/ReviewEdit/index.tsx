@@ -4,6 +4,10 @@ import ChoiceList from '../../components/ChoiceList';
 import { useAppSelector } from '../../hooks';
 import { ProjectSize, Review } from '../../types';
 
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
+
 import './ReviewEdit.css';
 
 export default function ReviewEdit() {
@@ -22,10 +26,14 @@ export default function ReviewEdit() {
             if (isNaN(Number(ps))) {
                 continue;
             }
-            options.push(<option value={ps}>{ProjectSize[ps]}</option>)
+            options.push(<option key={ps} value={ps}>{ProjectSize[ps]}</option>)
         }
         return options;
     };
+
+    const changeEventHandler = (callback: (val: string) => void) => {
+        return (evt: ChangeEvent<HTMLInputElement>) => callback(evt.currentTarget.value);
+    }
 
     return(
         <div className='review-edit-container'>
@@ -54,6 +62,7 @@ export default function ReviewEdit() {
                     What company goal does this project work towards?
                 </div>
                 <select value={review?.companyGoal} onChange={(e: any) => setReview({...review, companyGoal: e.currentTarget.value})}>
+                    <option value={undefined}> Select goal </option>
                     <option value='Goal1'>The promotion goal</option>
                     <option value='Goal2'>The demotion goal</option>
                     <option value='Goal3'>The ipo goal</option>
@@ -65,9 +74,11 @@ export default function ReviewEdit() {
                     How big of a project is this?
                 </div>
                 <select 
-                    value={ProjectSize[review?.projectSize || ProjectSize.SMALL]} 
+                    defaultValue={undefined}
+                    value={review?.projectSize ? ProjectSize[review?.projectSize] : undefined} 
                     onChange={(e: ChangeEvent<HTMLSelectElement>) => setReview({...review, projectSize: ProjectSize[e.currentTarget.value as keyof typeof ProjectSize]})}
                 >
+                    <option value={undefined}> Select size </option>
                     {getProjectSizeOptions()}
                 </select>
             </div>
@@ -88,12 +99,16 @@ export default function ReviewEdit() {
                 <BinaryWithFollowUp 
                     trueText='Yes'
                     falseText='No'
-                    inputPlaceholder='If Yes, enter deadline'
                     selected={review?.deadline}
                     onSelectedUpdate={(deadline: boolean) => setReview({...review, deadline})}
-                    onInputUpdate={(deadlineDate: string) => setReview({...review, deadlineDate: 123})}
-                    followUpValue={'in progress'}
-                />
+                >
+                    <DatePicker 
+                        selected={review?.deadlineDate ? new Date(review?.deadlineDate) : null} 
+                        onChange={(date: Date) => setReview({...review, deadlineDate: date.getTime()})} 
+                        showTimeSelect
+                        placeholderText='If yes, enter deadline'
+                    />
+                </BinaryWithFollowUp>
             </div>
             <div>
                 <div>
@@ -102,12 +117,16 @@ export default function ReviewEdit() {
                 <BinaryWithFollowUp 
                     trueText='Yes'
                     falseText='No'
-                    inputPlaceholder='If No, what happened?'
                     selected={review?.onSchedule}
                     onSelectedUpdate={(onSchedule: boolean) => setReview({...review, onSchedule})}
-                    onInputUpdate={(onScheduleReason: string) => setReview({...review, onScheduleReason})}
-                    followUpValue={review?.onScheduleReason}
-                />
+                >
+                    <input 
+                        onChange={changeEventHandler((onScheduleReason: string) => setReview({...review, onScheduleReason}))} 
+                        value={review?.onScheduleReason} 
+                        type='text' 
+                        placeholder={'If No, what happened?'} 
+                    />
+                </BinaryWithFollowUp>
             </div>
             <div>
                 <div>
@@ -185,14 +204,24 @@ export default function ReviewEdit() {
                 <div>
                     Did you work with any coworkers?
                 </div>
-                <select 
-                    value={review?.coworkerName} 
-                    onChange={(e: ChangeEvent<HTMLSelectElement>) => setReview({...review, coworkerName: e.currentTarget.value})}>
-                    <option value='pago1'>John</option>
-                    <option value='pago2'>Monte</option>
-                    <option value='pago3'>Spencer</option>
-                    <option value='pago4'>Stephen</option>
-                </select>
+
+                <BinaryWithFollowUp 
+                    trueText='Yes'
+                    falseText='No'
+                    selected={review?.withCoworker}
+                    onSelectedUpdate={(withCoworker: boolean) => setReview({...review, withCoworker})}
+                >
+                    <select 
+                        value={review?.coworkerName} 
+                        onChange={(e: ChangeEvent<HTMLSelectElement>) => setReview({...review, coworkerName: e.currentTarget.value})}>
+                        <option value={undefined}> Select if yes </option>
+                        <option value='pago1'>John</option>
+                        <option value='pago2'>Monte</option>
+                        <option value='pago3'>Spencer</option>
+                        <option value='pago4'>Stephen</option>
+                    </select>
+                </BinaryWithFollowUp>
+               
             </div>
             <div>
                 <div>
@@ -214,7 +243,7 @@ export default function ReviewEdit() {
                     value={review?.skillsUsed} 
                     onChange={(e: ChangeEvent<HTMLSelectElement>) => setReview({...review, skillsUsed: e.currentTarget.value})}
                 >
-                    <option value='skill1'>Ninja</option>
+                    <option value={undefined}> Select skill </option>
                     <option value='skill2'>Knife</option>
                     <option value='skill3'>People</option>
                     <option value='skill4'>Cooking</option>
@@ -240,6 +269,7 @@ export default function ReviewEdit() {
                     value={review?.improvementAreas} 
                     onChange={(e: ChangeEvent<HTMLSelectElement>) => setReview({...review, improvementAreas: e.currentTarget.value})}
                 >
+                    <option value={undefined}> Select area </option>
                     <option value='area1'>On time</option>
                     <option value='area2'>Procrastination</option>
                     <option value='area3'>Attention to detail</option>

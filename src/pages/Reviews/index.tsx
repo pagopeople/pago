@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import ReviewCard from '../../components/ReviewCard';
 import { BsFillPlusCircleFill } from 'react-icons/bs';
 import './Reviews.css';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { useNavigate } from 'react-router-dom';
-import { getReviewsAsync, startNewReview } from '../../reducers/ReviewsSlice';
+import { getReviewsAsync, resetActiveReviewState, startNewReview } from '../../reducers/ReviewsSlice';
 import { LoadState } from '../../types';
 import { ColorRing } from 'react-loader-spinner';
 
@@ -14,16 +14,19 @@ export default function Reviews() {
     const dispatch = useAppDispatch();
     const reviewsState = useAppSelector(state => state.reviewsState);
     const sessionState = useAppSelector(state => state.sessionState);
+    const [shouldNavigate, setShouldNavigate] = useState(false);
     
     useEffect(() => {
-        if (reviewsState.loadState === LoadState.INIT) {
+        if (sessionState.loadState === LoadState.LOADED && reviewsState.loadState === LoadState.INIT) {
             dispatch(getReviewsAsync(sessionState.user.accessToken || ''))
         }
-    }, [])
+    }, [sessionState.loadState])
     
     useEffect(() => {
-        if (reviewsState.activeReview !== undefined) {
+        if (reviewsState.activeReview !== undefined && shouldNavigate) {
             navigate("/review")
+        } else {
+            setShouldNavigate(true);
         }
     }, [reviewsState.activeReview]);
 

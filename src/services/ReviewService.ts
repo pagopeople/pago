@@ -1,3 +1,4 @@
+import { Review } from '../types';
 import { get, post } from './RequestHandler';
 
 
@@ -29,6 +30,18 @@ class ReviewService {
 
         return get(this.base_url + `/review/${id}`, config);
         
+    }
+
+    submitReview(review: Review, token: string) {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        };
+
+        return post(this.base_url + '/review', review, config);
+
     }
 
     createPeerReview(clientId: string, code: string, redirectUri: string) {

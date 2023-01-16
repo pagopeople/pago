@@ -9,7 +9,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import './ReviewEdit.css';
-import { getReviewWithIdAsync } from '../../reducers/ReviewsSlice';
+import { getReviewsAsync, getReviewWithIdAsync, resetActiveReviewState, submitReviewAsync } from '../../reducers/ReviewsSlice';
 import { useParams } from 'react-router-dom';
 import { ColorRing } from 'react-loader-spinner';
 
@@ -27,15 +27,28 @@ export default function ReviewEdit() {
             setReviewHook(review);
         }
     }
+
+    useEffect(() => {
+        return function cleanup() {
+            dispatch(resetActiveReviewState());
+        }
+    }, []);
+
     useEffect(() => {
         if (sessionState.loadState === LoadState.LOADED && 
             reviewsState.activeReviewLoadState === LoadState.INIT || 
             reviewsState.activeReview?.id !== reviewId) {
             dispatch(getReviewWithIdAsync({reviewId: reviewId || '', token: sessionState.user.accessToken || ''}))
         } else if (reviewsState.activeReviewLoadState === LoadState.LOADED) {
-            setReview(reviewsState.activeReview);
+            setReviewHook(reviewsState.activeReview);
         }
-    }, [sessionState.loadState, reviewsState.activeReviewLoadState])
+    }, [sessionState.loadState, reviewsState.activeReviewLoadState]);
+
+    useEffect(() => {
+        if (reviewsState.submitReviewLoadState === LoadState.LOADED) {
+            dispatch(getReviewsAsync(sessionState.user.accessToken || ''))
+        }
+    }, [reviewsState.submitReviewLoadState]);
     
     const getProjectSizeOptions = () => {
         const options:React.ReactNode[] = [];
@@ -50,6 +63,10 @@ export default function ReviewEdit() {
 
     const changeEventHandler = (callback: (val: string) => void) => {
         return (evt: ChangeEvent<HTMLInputElement>) => callback(evt.currentTarget.value);
+    }
+
+    const onSubmitReview = () => {
+        dispatch(submitReviewAsync({review: review || {}, token: sessionState.user.accessToken || ''}));
     }
 
     const getReviewTemplate = () => {
@@ -294,7 +311,7 @@ export default function ReviewEdit() {
                         <option value='area4'>Communicating with coworkers</option>
                     </select>
                 </div>
-                {!reviewId && <button className='review-edit-submit-button' onClick={() => console.log(review)}>Submit</button>}
+                {!reviewId && <button className='review-edit-submit-button' onClick={onSubmitReview}>Submit</button>}
             </>
         )
     }
@@ -302,7 +319,8 @@ export default function ReviewEdit() {
     return(
         <div className='review-edit-container'>
             <ColorRing
-                visible={reviewsState.activeReviewLoadState === LoadState.LOADING }
+                visible={reviewsState.activeReviewLoadState === LoadState.LOADING || 
+                reviewsState.submitReviewLoadState === LoadState.LOADING }
                 height="80"
                 width="80"
                 ariaLabel="blocks-loading"
@@ -310,6 +328,9 @@ export default function ReviewEdit() {
                 wrapperClass="blocks-wrapper"
                 colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
             />
+
+            {reviewsState.submitReviewLoadState === LoadState.LOADED && <h3>Successfully saved</h3>}
+            {reviewsState.submitReviewLoadState === LoadState.ERROR && <h3>Error saving review</h3>}
 
             {reviewsState.activeReviewLoadState === LoadState.LOADED && getReviewTemplate()}
 

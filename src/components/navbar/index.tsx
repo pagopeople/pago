@@ -22,7 +22,7 @@ export default function Navbar() {
         if (location.pathname === "/") {
             return "Home";
         }
-        return location.pathname[1].toUpperCase() + location.pathname.slice(2) + ' Dashboards';
+        return 'Dashboards';
     };
 
     return(

@@ -1,10 +1,66 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
+import ReviewCard from '../../components/ReviewCard';
+import { BsFillPlusCircleFill } from 'react-icons/bs';
+import './Reviews.css';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { useNavigate } from 'react-router-dom';
+import { getReviewsAsync, resetActiveReviewState, startNewReview } from '../../reducers/ReviewsSlice';
+import { LoadState } from '../../types';
+import { ColorRing } from 'react-loader-spinner';
 
 export default function Reviews() {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const reviewsState = useAppSelector(state => state.reviewsState);
+    const sessionState = useAppSelector(state => state.sessionState);
+    const [shouldNavigate, setShouldNavigate] = useState(false);
+    
+    useEffect(() => {
+        if (sessionState.loadState === LoadState.LOADED && reviewsState.loadState === LoadState.INIT) {
+            dispatch(getReviewsAsync(sessionState.user.accessToken || ''))
+        }
+    }, [sessionState.loadState])
+    
+    useEffect(() => {
+        if (reviewsState.activeReview !== undefined && shouldNavigate) {
+            navigate("/review")
+        } else {
+            setShouldNavigate(true);
+        }
+    }, [reviewsState.activeReview]);
+
+    const onAddReviewClick = () => {
+        dispatch(startNewReview());
+    }
+
     return(
-        <div>
-            Reviews
+        <div className='reviews-container'>
+            <div className='reviews-header'>
+                <h2>
+                    Your completed reviews
+                </h2>
+                <div className='reviews-add' onClick={onAddReviewClick}>
+                    <BsFillPlusCircleFill /> Add a review
+                </div>
+            </div>
+            <ColorRing
+                visible={reviewsState.loadState === LoadState.LOADING }
+                height="80"
+                width="80"
+                ariaLabel="blocks-loading"
+                wrapperStyle={{}}
+                wrapperClass="blocks-wrapper"
+                colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+            />
+            
+            {
+                reviewsState.completedReviews.map((review) => 
+                    <span onClick={() => navigate(`/review/${review.id}`)}>
+                        <ReviewCard review={review} key={review.id} />
+                    </span>
+                )
+            }
         </div>
     )
 }

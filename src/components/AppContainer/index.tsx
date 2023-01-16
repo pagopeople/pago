@@ -29,10 +29,6 @@ export default function AppContainer() {
 
 
     useEffect(() => {
-        console.log(location)
-    }, []);
-
-    useEffect(() => {
         if (configState.loadState === LoadState.INIT) {
             dispatch(getConfigAsync());
         } else if (configState.loadState === LoadState.LOADED) {
@@ -49,7 +45,6 @@ export default function AppContainer() {
     useEffect(() => {
         if (sessionState.loadState === LoadState.LOADED) {
             // This happens after the sign in flow (vs using existing session flow)
-            console.log(sessionState.user);
             const IdToken = new CognitoIdToken({IdToken: sessionState.user.idToken || ''});
             const AccessToken = new CognitoAccessToken({AccessToken: sessionState.user.accessToken || ''});
             const RefreshToken = new CognitoRefreshToken({RefreshToken: ''})
@@ -77,7 +72,6 @@ export default function AppContainer() {
         }
 
         const user = userPoolRef.current.getCurrentUser();
-        console.log("curUser", user);
         
         if ( user !== null) {
             user.getSession((err: Error | null, session: CognitoUserSession) => {

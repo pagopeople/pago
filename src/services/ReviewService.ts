@@ -1,14 +1,37 @@
 import { get, post } from './RequestHandler';
 
 
-class SessionService {
+class ReviewService {
     base_url: string
 
     constructor(base_url: string) {
         this.base_url = base_url
     }
 
-    exchangeCodeForTokens(clientId: string, code: string, redirectUri: string) {
+    getReviews(token: string) {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        }
+
+        return get(this.base_url + '/reviews', config);
+    }
+
+    getReview(id: string, token: string) {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        };
+
+        return get(this.base_url + `/review/${id}`, config);
+        
+    }
+
+    createPeerReview(clientId: string, code: string, redirectUri: string) {
         const data = {
             grant_type: "authorization_code",
             client_id: clientId,
@@ -29,5 +52,5 @@ class SessionService {
         return post(this.base_url + '?' + p, {}, config);
     }
 }
-export default new SessionService("https://pagopeople.auth.us-west-2.amazoncognito.com/oauth2/token")
+export default new ReviewService("https://72gdmarqte.execute-api.us-west-2.amazonaws.com")
 

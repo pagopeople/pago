@@ -42,7 +42,8 @@ const router =  createBrowserRouter(
       <Route path="/skills" element={<Skills />} />
       <Route path="/improvement" element={<Improvement />} />
       <Route path="/managers" element={<Managers />} />
-      <Route path="/reviews/new" element={<ReviewEdit />} />
+      <Route path="/review" element={<ReviewEdit />} />
+      <Route path="/review/:reviewId" element={<ReviewEdit />} /> 
       <Route path="*" element={<div>404</div>} />
     </Route>
   )

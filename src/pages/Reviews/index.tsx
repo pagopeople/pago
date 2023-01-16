@@ -5,16 +5,25 @@ import { BsFillPlusCircleFill } from 'react-icons/bs';
 import './Reviews.css';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { useNavigate } from 'react-router-dom';
-import { startNewReview } from '../../reducers/ReviewsSlice';
+import { getReviewsAsync, startNewReview } from '../../reducers/ReviewsSlice';
+import { LoadState } from '../../types';
+import { ColorRing } from 'react-loader-spinner';
 
 export default function Reviews() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const reviewsState = useAppSelector(state => state.reviewsState);
+    const sessionState = useAppSelector(state => state.sessionState);
+    
+    useEffect(() => {
+        if (reviewsState.loadState === LoadState.INIT) {
+            dispatch(getReviewsAsync(sessionState.user.accessToken || ''))
+        }
+    }, [])
     
     useEffect(() => {
         if (reviewsState.activeReview !== undefined) {
-            navigate("/reviews/new")
+            navigate("/review")
         }
     }, [reviewsState.activeReview]);
 
@@ -32,10 +41,23 @@ export default function Reviews() {
                     <BsFillPlusCircleFill /> Add a review
                 </div>
             </div>
+            <ColorRing
+                visible={reviewsState.loadState === LoadState.LOADING }
+                height="80"
+                width="80"
+                ariaLabel="blocks-loading"
+                wrapperStyle={{}}
+                wrapperClass="blocks-wrapper"
+                colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+            />
             
-            <ReviewCard />
-            <ReviewCard />
-            <ReviewCard />
+            {
+                reviewsState.completedReviews.map((review) => 
+                    <span onClick={() => navigate(`/review/${review.id}`)}>
+                        <ReviewCard review={review} key={review.id} />
+                    </span>
+                )
+            }
         </div>
     )
 }

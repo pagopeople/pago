@@ -1,0 +1,130 @@
+{
+    "type": "VerticalLayout",
+    "elements": [
+      {
+        "type": "Control",
+        "scope": "#/properties/project_name"
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/project_description",
+        "options": {
+          "multi": true
+        }
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/company_goal"
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/project_size"
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/hours_taken"
+      },
+      {
+        "type": "HorizontalLayout",
+        "elements": [
+          {
+            "type": "Control",
+            "scope": "#/properties/had_deadline"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/deadline_date",
+            "rule": {
+              "effect": "HIDE",
+              "condition": {
+                "type": "LEAF",
+                "scope": "#/properties/had_deadline",
+                "expectedValue": false
+              }
+            }
+          }
+        ]
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/helpful_score",
+        "options": {
+            "startHint": "Not close",
+            "endHint": "Exactly what was needed"
+        }
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/clear_expectations_score",
+        "options": {
+            "startHint": "Mud",
+            "endHint": "Crystal"
+        }
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/manager_score",
+        "options": {
+            "startHint": "Not at all",
+            "endHint": "Exactly"
+        }
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/manager_excessive_score",
+        "options": {
+            "startHint": "Not involved",
+            "endHint": "Constantly involved"
+        }
+      },
+      {
+        "type": "HorizontalLayout",
+        "elements": [
+          {
+            "type": "Control",
+            "scope": "#/properties/with_coworkers"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/coworker_id",
+            "rule": {
+              "effect": "HIDE",
+              "condition": {
+                "type": "LEAF",
+                "scope": "#/properties/with_coworkers",
+                "expectedValue": false
+              }
+            }
+          }
+        ]
+      },
+
+      {
+        "type": "Control",
+        "scope": "#/properties/coworker_performance_score",
+        "options": {
+            "startHint": "Poorly",
+            "endHint": "Exceptional"
+        }
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/skills_needed"
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/skill_score",
+        "options": {
+            "startHint": "Entry",
+            "endHint": "Expert"
+        }
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/completion_percentage",
+        "options": {
+          "slider": true
+        }
+      }
+    ]
+  }

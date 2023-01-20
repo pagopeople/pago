@@ -12,6 +12,7 @@ import './ReviewEdit.css';
 import { getReviewsAsync, getReviewWithIdAsync, resetActiveReviewState, submitReviewAsync } from '../../reducers/ReviewsSlice';
 import { useParams } from 'react-router-dom';
 import { ColorRing } from 'react-loader-spinner';
+import ReviewForm from '../../components/ReviewForm';
 
 export default function ReviewEdit() {
     // When there is a reviewId then we are in view only mode. This is a completed review.
@@ -332,7 +333,7 @@ export default function ReviewEdit() {
             {reviewsState.submitReviewLoadState === LoadState.LOADED && <h3>Successfully saved</h3>}
             {reviewsState.submitReviewLoadState === LoadState.ERROR && <h3>Error saving review</h3>}
 
-            {reviewsState.activeReviewLoadState === LoadState.LOADED && getReviewTemplate()}
+            {reviewsState.activeReviewLoadState === LoadState.LOADED && <ReviewForm />}
 
             {reviewsState.activeReviewLoadState === LoadState.ERROR && <span>Error fetching review</span>}
         </div>

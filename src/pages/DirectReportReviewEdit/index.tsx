@@ -17,8 +17,10 @@ export default function DirectReportReviewEdit() {
     const [review, setReviewHook] = useState<Review>(reviewsState.activeReview || {schemaId: 1});
     
     const setReview = (review: Review) => {
-            setReviewHook(review);
-    
+        if (JSON.stringify(review) === JSON.stringify({schemaId: 1})) {
+            return;
+        }
+        setReviewHook(review);
     }
 
     useEffect(() => {

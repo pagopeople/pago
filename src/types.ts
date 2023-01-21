@@ -69,7 +69,7 @@ export interface Review {
     skillProficiencyScore?: number,
     improvementAreas?: string,
     submittedBy?: string,
-    submittedFor?: string,
+    reviewing?: string,
     createdAt?: number,
 }
 

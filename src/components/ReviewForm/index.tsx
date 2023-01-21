@@ -1,7 +1,6 @@
 import { JsonForms } from '@jsonforms/react';
 import React, { useState } from 'react';
-import schema from './schema.json';
-import uischema from './uischema.json';
+import SchemaFetcher from '../../reviewSchemas/SchemaFetcher';
 import {
     materialCells,
     materialRenderers,
@@ -15,12 +14,14 @@ interface Props {
   data: any;
   onUpdate: (data: any) => void;
   readonly?: boolean;
+  reviewSchemaId?: string;
 }
 export default function ReviewForm(props: Props) {
   const {
     data,
     onUpdate,
-    readonly
+    readonly,
+    reviewSchemaId,
   } = props;
 
   const renderers = [
@@ -28,6 +29,9 @@ export default function ReviewForm(props: Props) {
     //register custom renderers
     { tester: NumberRatingControlTester, renderer: NumberRatingControl },
   ];
+
+  const schema = SchemaFetcher.getJsonSchema();
+  const uischema = SchemaFetcher.getUiSchemaWithId(reviewSchemaId || '1');
 
 
   return (
@@ -38,7 +42,7 @@ export default function ReviewForm(props: Props) {
         data={data}
         renderers={renderers}
         cells={materialCells}
-        onChange={({ errors, data }) => onUpdate(data)}
+        onChange={({ errors, data }) => {console.log(errors); console.log(data); onUpdate(data)}}
         readonly={readonly}
       />
     </div>

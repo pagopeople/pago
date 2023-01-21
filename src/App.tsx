@@ -24,6 +24,7 @@ import Managers from './pages/Managers';
 
 import './App.css';
 import ReviewEdit from './pages/ReviewEdit';
+import DirectReportReviewEdit from './pages/DirectReportReviewEdit';
 
 
 const router =  createBrowserRouter(
@@ -44,6 +45,7 @@ const router =  createBrowserRouter(
       <Route path="/managers" element={<Managers />} />
       <Route path="/review" element={<ReviewEdit />} />
       <Route path="/review/:reviewId" element={<ReviewEdit />} /> 
+      <Route path="/review/:reviewId/direct_report" element={<DirectReportReviewEdit />} /> 
       <Route path="*" element={<div>404</div>} />
     </Route>
   )

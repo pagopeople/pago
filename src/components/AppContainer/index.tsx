@@ -16,7 +16,7 @@ import {
 } from 'amazon-cognito-identity-js';
 import { config } from 'process';
 import { exchangeCodeForTokenAsync, updateUserFromCachedSession, setAuthState } from '../../reducers/SessionSlice';
-
+import axios from 'axios';
 
 export default function AppContainer() {
     const dispatch = useAppDispatch();

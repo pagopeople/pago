@@ -24,6 +24,26 @@
         "title": "How many hours did this take?",
         "type": "number"
       },
+      "expectedHoursSpent": {
+        "title": "How many hours should this project have taken?",
+        "type": "number"
+      },
+      "onSchedule": {
+        "title": "Was the project completed on or ahead of schedule?",
+        "type": "boolean"
+      },
+      "offScheduleReason": {
+        "title": "What prevented the project from being completed on time?",
+        "type": "string"
+      },
+      "outsideEmployeeControl": {
+        "title": "Was project late due to factors outside of the employee's control?",
+        "type": "boolean"
+      },
+      "matchProjectNeedScore": {
+        "title": "How closely did the project the employee completed match what was needed?",
+        "type": "number"
+      },
       "hadDeadline": {
         "title": "Did the project have a deadline?",
         "type": "boolean"
@@ -36,6 +56,30 @@
       "managerInvolvementScore": {
         "title": "How involved was your manager?",
         "type": "integer"
+      },
+      "selfInvolvementScore": {
+        "title": "How involved were you in the project",
+        "type": "number"
+      },
+      "selfInvolvementNeedScore": {
+        "title": "If the employee completed the project again, how involved would you need to be?",
+        "type": "number"
+      },
+      "exceptionalJob": {
+        "title": "Did the employee do an exceptionally good job?",
+        "type": "boolean"
+      },
+      "badJob": {
+        "title": "Did the employee do a bad job?",
+        "type": "boolean"
+      },
+      "withCoworkersScore": {
+        "title": "How well did the employee work with coworkers on this project?",
+        "type": "number"
+      },
+      "employeeSubstituteScore": {
+        "title": "How hard would it be to find or hire another employee to do this project?",
+        "type": "number"
       },
       "clearExpectationsScore": {
         "title": "Are expectations for the project clear?",
@@ -72,6 +116,27 @@
         "title": "What level of proficiency did you need for the skills selected?",
         "type": "integer"
       }, 
+      "areasToImprove": {
+        "title": "What areas can you improve on?",
+        "type": "string",
+        "enum": [
+          "On time",
+          "Procrastination",
+          "Attention to detail",
+          "Communicating with manager",
+          "Communicating with coworkers",
+          "Trusting coworkers",
+          "Trusting manager",
+          "Proficiency in skills needed",
+          "Building trust from your manager to you",
+          "Confidence",
+          "Setting clear expectations",
+          "Carefully follow instructions",
+          "Anticipating company needs",
+          "Finishing the last 10% of the project",
+          "There is always room to get better but in the most humble way possible; I kinda crushed this project"
+        ]
+      },
       "completionPercentage": {
         "title": "How close is this project to being finished",
         "type": "number",

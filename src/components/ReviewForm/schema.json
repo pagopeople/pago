@@ -1,103 +1,83 @@
 {
     "type": "object",
     "properties": {
-      "project_name": {
+      "projectName": {
         "title": "Project name",
         "type": "string",
         "minLength": 1
       },
-      "project_description": {
+      "projectDescription": {
         "title": "Brief description of the project",
         "type": "string"
       },
-      "company_goal": {
+      "companyGoal": {
         "title": "What company goal does this project work towards?",
         "type": "string",
         "enum": ["Goal 1", "Goal 2", "Goal 3", "Goal 4"]
       },
-      "project_size": {
+      "projectSize": {
         "title": "How big of a project is this?",
         "type": "string",
         "enum": ["Existential", "Large", "Medium", "Small"]
       },
-      "hours_taken": {
+      "hoursSpent": {
         "title": "How many hours did this take?",
         "type": "number"
       },
-      "had_deadline": {
+      "hadDeadline": {
         "title": "Did the project have a deadline?",
         "type": "boolean"
       },
-      "deadline_date": {
+      "deadlineDate": {
         "title": "What was the deadline?",
         "type": "string",
         "format": "date"
       },
-      "done": {
-        "type": "boolean"
-      },
-      "due_date": {
-        "type": "string",
-        "format": "date"
-      },
-      "manager_score": {
+      "managerInvolvementScore": {
         "title": "How involved was your manager?",
         "type": "integer"
       },
-      "clear_expectations_score": {
+      "clearExpectationsScore": {
         "title": "Are expectations for the project clear?",
         "type": "integer"
       },
-      "helpful_score": {
+      "helpfulScore": {
         "title": "Has the work you have been doing been helpful in meeting company needs for the project?",
         "type": "integer"
       },
-      "manager_excessive_score": {
+      "managerExcessiveScore": {
         "title": "Did your manager involve themselves too much",
         "type": "integer"
       },
-      "with_coworkers": {
+      "withCoworkers": {
         "title": "Did you work with coworkers?",
         "type": "boolean",
         "format": "binary" 
       },
-      "coworker_id": {
+      "coworkerId": {
         "title": "Select coworker",
         "type": "string",
         "enum": ["Monte", "Spencer", "John", "Stephen"]
       },
-      "coworker_performance_score": {
+      "coworkerPerformanceScore": {
         "title": "How did your coworker perform?",
         "type": "integer"
       },
-      "skills_needed": {
+      "skillsNeeded": {
         "title": "What skills have you needed or will you need on this project?",
         "type": "string",
         "enum": ["Math", "Coding", "People", "Knife", "Ninja"]
       },
-      "skill_score": {
+      "skillScore": {
         "title": "What level of proficiency did you need for the skills selected?",
         "type": "integer"
       }, 
-      "completion_percentage": {
+      "completionPercentage": {
         "title": "How close is this project to being finished",
         "type": "number",
         "minimum": 0,
         "maximum": 100,
         "default": 50
-      },
-
-
-
-
-      "recurrence": {
-        "type": "string",
-        "enum": ["Never", "Daily", "Weekly", "Monthly"],
-        "someRandomField": ["field1"]
-      },
-      "recurrence_interval": {
-        "type": "integer"
       }
-    },
-    "required": ["name", "due_date"]
+    }  
   }

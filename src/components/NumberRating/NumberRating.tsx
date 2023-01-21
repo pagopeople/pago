@@ -12,6 +12,7 @@ interface NumberRatingProps {
   endHint?: string,
   options: Array<number>,
   title?: string,
+  enabled?: boolean,
 }
 
 export const NumberRating: React.FC<NumberRatingProps> = (props) => {
@@ -22,6 +23,7 @@ export const NumberRating: React.FC<NumberRatingProps> = (props) => {
         updateValue,
         value,
         title,
+        enabled,
     } = props;
 
     return(
@@ -36,7 +38,7 @@ export const NumberRating: React.FC<NumberRatingProps> = (props) => {
                         <div 
                             className={`choice-list-option${value === option ? " choice-list-option-active": ""}`}
                             key={option}
-                            onClick={() => updateValue(option)}
+                            onClick={() => enabled && updateValue(option)}
                         >
                             {option}
                         </div>

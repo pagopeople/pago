@@ -11,35 +11,36 @@ import NumberRatingControl from '../NumberRating/NumberRatingControl';
 
 import NumberRatingControlTester from '../NumberRating/NumberRatingControlTester';
 
-const initialData = {
-    name: 'Send email to Adrian',
-    description: 'Confirm if you have passed the subject\nHereby ...',
-    done: true,
-    recurrence: 'Daily',
-    rating: 3,
-  };
+interface Props {
+  data: any;
+  onUpdate: (data: any) => void;
+  readonly?: boolean;
+}
+export default function ReviewForm(props: Props) {
+  const {
+    data,
+    onUpdate,
+    readonly
+  } = props;
 
-export default function ReviewForm() {
-
-    const [data, setData] = useState<any>(initialData);
-
-    const renderers = [
-        ...materialRenderers,
-        //register custom renderers
-        { tester: NumberRatingControlTester, renderer: NumberRatingControl },
-      ];
+  const renderers = [
+    ...materialRenderers,
+    //register custom renderers
+    { tester: NumberRatingControlTester, renderer: NumberRatingControl },
+  ];
 
 
-    return (
-        <div>
-            <JsonForms
-              schema={schema}
-              uischema={uischema}
-              data={data}
-              renderers={renderers}
-              cells={materialCells}
-              onChange={({ errors, data }) => setData(data)}
-            />
-        </div>
-    )
+  return (
+    <div>
+      <JsonForms
+        schema={schema}
+        uischema={uischema}
+        data={data}
+        renderers={renderers}
+        cells={materialCells}
+        onChange={({ errors, data }) => onUpdate(data)}
+        readonly={readonly}
+      />
+    </div>
+  )
 }

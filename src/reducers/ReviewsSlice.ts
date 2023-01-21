@@ -21,6 +21,7 @@ const initialState: ReviewsState  = {
 };
 
 const initialReview: Review = {
+  version: 1,
 }
 
 
@@ -79,7 +80,6 @@ export const reviewsSlice = createSlice({
             state.activeReviewLoadState = LoadState.LOADED;
         },
         resetActiveReviewState: (state) => {
-          console.log('resetting review state');
           state.activeReview = undefined;
           state.activeReviewLoadState = LoadState.INIT;
           state.submitReviewLoadState = LoadState.INIT;

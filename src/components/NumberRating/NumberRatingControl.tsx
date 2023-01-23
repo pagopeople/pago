@@ -22,7 +22,7 @@ const RatingControl = (props: OwnPropsOfControl & RatingControlProps & {readOnly
       options={getOptions(props.schema?.minimum, props.schema?.maximum)}
       startHint={props.uischema?.options?.startHint}
       endHint={props.uischema?.options?.endHint}
-      title={props.schema?.title}
+      title={props.uischema?.label === undefined ? props.schema?.title : `${props.uischema.label}`}
       enabled={enabled}
     />
   );

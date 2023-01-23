@@ -21,7 +21,7 @@ const initialState: ReviewsState  = {
 };
 
 const initialReview: Review = {
-  schemaId: 1,
+  schemaId: 3,
 }
 
 

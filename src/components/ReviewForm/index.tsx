@@ -32,13 +32,25 @@ export default function ReviewForm(props: Props) {
 
   const schema = SchemaFetcher.getJsonSchema();
   const uischema = SchemaFetcher.getUiSchemaWithId(reviewSchemaId || '1');
+  const cultureUiSchema = SchemaFetcher.getUiSchemaWithId('culture');
 
+  const getRandomInt = (max: number) => {
+    return Math.floor(Math.random() * max);
+  };
+
+  const schem = {...uischema, elements: [...uischema.elements]}
+
+  const idx1 = getRandomInt(cultureUiSchema.elements.length);
+  const idx2 = getRandomInt(cultureUiSchema.elements.length);
+
+  schem.elements.push(cultureUiSchema.elements[0]);
+  schem.elements.push(cultureUiSchema.elements[idx2]);
 
   return (
     <div>
       <JsonForms
         schema={schema}
-        uischema={uischema}
+        uischema={schem}
         data={data}
         renderers={renderers}
         cells={materialCells}

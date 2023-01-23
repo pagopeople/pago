@@ -21,7 +21,7 @@
         "enum": ["Existential", "Large", "Medium", "Small"]
       },
       "hoursSpent": {
-        "title": "How many hours did this take?",
+        "title": "How many hours did this project take?",
         "type": "number"
       },
       "expectedHoursSpent": {
@@ -41,6 +41,10 @@
         "type": "boolean"
       },
       "matchProjectNeedScore": {
+        "title": "How closely did the project you completed match what was needed?",
+        "type": "number"
+      },
+      "employeeMatchProjectNeedScore": {
         "title": "How closely did the project the employee completed match what was needed?",
         "type": "number"
       },
@@ -55,7 +59,10 @@
       },
       "managerInvolvementScore": {
         "title": "How involved was your manager?",
-        "type": "integer"
+        "type": "number"
+      },
+      "managerInvolvementNeedScore": {
+        "type": "number"
       },
       "selfInvolvementScore": {
         "title": "How involved were you in the project",
@@ -68,6 +75,9 @@
       "exceptionalJob": {
         "title": "Did the employee do an exceptionally good job?",
         "type": "boolean"
+      },
+      "errorsScore": {
+        "type": "number"
       },
       "badJob": {
         "title": "Did the employee do a bad job?",
@@ -143,6 +153,111 @@
         "minimum": 0,
         "maximum": 100,
         "default": 50
+      },
+      "managerSucceedScore": {
+        "type": "number"
+      },
+     "managerSamePageScore": {
+        "type": "number"
+      },
+     "managerFairScore": {
+        "type": "number"
+      },
+     "managerRelationshipScore": {
+        "type": "number"
+      },
+     "managerLikeMeScore": {
+        "type": "number"
+      },
+     "managerILikeScore": {
+        "type": "number"
+      },
+     "workFriendsScore": {
+        "type": "number"
+      },
+     "companyProgressingScore": {
+        "type": "number"
+      },
+     "clearCompanyVisionScore": {
+        "type": "number"
+      },
+     "criticismWelcomeScore": {
+        "type": "number"
+      },
+     "companyTransparentScore": {
+        "type": "number"
+      },
+     "companyCaresMeScore": {
+        "type": "number"
+      },
+     "companyProudScore": {
+        "type": "number"
+      },
+     "recommendFriendsScore": {
+        "type": "number"
+      },
+     "leadershipTrustScore": {
+        "type": "number"
+      },
+     "competitivePayScore": {
+        "type": "number"
+      },
+     "benefitsGoodScore": {
+        "type": "number"
+      },
+     "benefitsValuableScore": {
+        "type": "number"
+      },
+     "hadWorkersScore": {
+        "type": "number"
+      },
+     "smartCoworkersScore": {
+        "type": "number"
+      },
+     "smartLeadersScore": {
+        "type": "number"
+      },
+     "companyDidMoreScore": {
+        "type": "number"
+      },
+     "stillCompanyOneYearScore": {
+        "type": "number"
+      },
+     "stilCompanyTwoYearScore": {
+        "type": "number"
+      },
+     "stillCompanyFiveYearScore": {
+        "type": "number"
+      },
+     "promotedNewSkillsScore": {
+        "type": "number"
+      },
+     "promotedPerformWellScore": {
+        "type": "number"
+      },
+     "leaveTeamScore": {
+        "type": "number"
+      },
+     "leaveCompanyScore": {
+        "type": "number"
+      },
+     "financialIncentiveScore": {
+        "type": "number"
+      },
+     "succeedTogetherScore": {
+        "type": "number"
+      },
+     "likeWorkingScore": {
+        "type": "number"
+      },
+     "workImportanceScore": {
+        "type": "number"
+      },
+     "workUsefulScore": {
+        "type": "number"
+      },
+     "impressedScore": {
+        "type": "number"
       }
     }  
   }

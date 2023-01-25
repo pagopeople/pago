@@ -21,7 +21,7 @@ const initialState: ReviewsState  = {
 };
 
 const initialReview: Review = {
-  schemaId: 3,
+  schemaId: 'endproj',
 }
 
 
@@ -91,13 +91,14 @@ export const reviewsSlice = createSlice({
     name: 'ReviewState',
     initialState,
     reducers: {
-        startNewReview: (state) => {
-          console.log('dafack');
-            state.activeReview = initialReview;
+        startNewReview: (state, action) => {
+            state.activeReview = {
+              ...initialReview,
+              schemaId: action.payload,
+            };
             state.activeReviewLoadState = LoadState.LOADED;
         },
         resetActiveReviewState: (state) => {
-          console.log('Resetting reviews');
           state.activeReview = undefined;
           state.activeReviewLoadState = LoadState.INIT;
           state.submitReviewLoadState = LoadState.INIT;

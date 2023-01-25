@@ -6,11 +6,7 @@
         {
         "type": "Control",
             "scope": "#/properties/managerSucceedScore",
-            "label": "My manager wants to see me grow and succeed?",
-            "options": {
-                "startHint": "",
-                "endHint": ""
-            }
+            "label": "My manager wants to see me grow and succeed?"
         },
         {
         "type": "Control",

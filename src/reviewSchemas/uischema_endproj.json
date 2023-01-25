@@ -84,7 +84,7 @@
       },
       {
         "type": "Control",
-        "scope": "#/properties/managerInvolvementScore",
+        "scope": "#/properties/managerInvolvementNeedScore",
         "label": "If you completed the project again, how involved would your manager need to be?",
         "options": {
             "startHint": "Not involved",

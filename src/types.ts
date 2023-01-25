@@ -36,7 +36,7 @@ export interface ExchangeCodeRequest {
 export interface Review {
     id?: string,
     peerReviewId?: string,
-    schemaId?: number,
+    schemaId?: string,
     projectName?: string,
     projectDescription?: string,
     companyGoal?: string,

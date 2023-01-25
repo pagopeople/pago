@@ -1,15 +1,18 @@
 import schema from './schema.json';
-import uischema_1 from './uischema_1.json';
-import uischema_2 from './uischema_2.json';
-import uischema_3 from './uischema_3.json';
+import uischema_midproj from './uischema_midproj.json';
+import uischema_endproj from './uischema_endproj.json';
+import uischema_manager from './uischema_manager.json';
 import uischema_culture from './uischema_culture.json';
 
 
 class SchemaFetcher {
     _UI_SCHEMA_MAP: {[key:string]:any} = {
-        '1': uischema_1,
-        '2': uischema_2,
-        '3': uischema_3,
+        'midproj': uischema_midproj,
+        '1': uischema_midproj,
+        'endproj': uischema_endproj,
+        '2': uischema_endproj,
+        'manager': uischema_manager,
+        '3': uischema_manager,
         'culture': uischema_culture,
     };
 

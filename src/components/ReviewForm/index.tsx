@@ -1,5 +1,5 @@
 import { JsonForms } from '@jsonforms/react';
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import SchemaFetcher from '../../reviewSchemas/SchemaFetcher';
 import {
     materialCells,
@@ -15,6 +15,7 @@ interface Props {
   onUpdate: (data: any) => void;
   readonly?: boolean;
   reviewSchemaId?: string;
+  addRandomCultureQuestions?: boolean;
 }
 export default function ReviewForm(props: Props) {
   const {
@@ -22,6 +23,7 @@ export default function ReviewForm(props: Props) {
     onUpdate,
     readonly,
     reviewSchemaId,
+    addRandomCultureQuestions,
   } = props;
 
   const renderers = [
@@ -30,27 +32,76 @@ export default function ReviewForm(props: Props) {
     { tester: NumberRatingControlTester, renderer: NumberRatingControl },
   ];
 
+  const getFieldNameFromElement = (element: any) => {
+    if (element.scope) {
+      const parts = element.scope.split("/");
+      return parts[parts.length - 1];
+    }
+    return undefined;
+  }
+
   const schema = SchemaFetcher.getJsonSchema();
   const uischema = SchemaFetcher.getUiSchemaWithId(reviewSchemaId || '1');
   const cultureUiSchema = SchemaFetcher.getUiSchemaWithId('culture');
+  const cultureFieldNamesMap: {[key: string]: any} = useMemo(
+    () => cultureUiSchema.elements.reduce((mp: {[key:string]: any}, element:any) => {
+      const fieldName = getFieldNameFromElement(element)
+      if (fieldName) {
+        mp[fieldName] = element;
+      }
+      return mp
+    }, {}), []);
+
+  const [didAddRandomCultureQuestions, setDidAddRandomCultureQuestions ] = useState(false);
+  const [addedCultureQuestions, setAddedCultureQuestions] = useState<Set<string>>(new Set());
 
   const getRandomInt = (max: number) => {
     return Math.floor(Math.random() * max);
   };
 
-  const schem = {...uischema, elements: [...uischema.elements]}
+  const getUiSchemaWithCultureQuestions = () => {
+    const s = {...uischema, elements: [...uischema.elements]};
 
-  const idx1 = getRandomInt(cultureUiSchema.elements.length);
-  const idx2 = getRandomInt(cultureUiSchema.elements.length);
+    if (addRandomCultureQuestions && !didAddRandomCultureQuestions) {
+      const idx1 = getRandomInt(cultureUiSchema.elements.length);
+      const idx2 = getRandomInt(cultureUiSchema.elements.length);
+      const e1 = cultureUiSchema.elements[idx1];
+      const e2 = cultureUiSchema.elements[idx2];
 
-  schem.elements.push(cultureUiSchema.elements[0]);
-  schem.elements.push(cultureUiSchema.elements[idx2]);
+      s.elements.push(e1);
+      if (getFieldNameFromElement(e1)) {
+        addedCultureQuestions.add(getFieldNameFromElement(e1));
+      }
+
+      s.elements.push(cultureUiSchema.elements[idx2]);
+      if (getFieldNameFromElement(e2)) {
+        addedCultureQuestions.add(getFieldNameFromElement(e2));
+      }
+
+      setAddedCultureQuestions(new Set(addedCultureQuestions));
+      setDidAddRandomCultureQuestions(true);
+    }
+
+    // Mainly for when coming to view a completed review. We do not want to add
+    // random culture questions we want to add the ones they answered.
+    const cultureFieldNames = Object.keys(cultureFieldNamesMap);
+    Object.keys(data).map((field) => {
+      if (cultureFieldNames.indexOf(field) >= 0 && !addedCultureQuestions.has(field)) {
+        s.elements.push(cultureFieldNamesMap[field]);
+        addedCultureQuestions.add('field');
+        setAddedCultureQuestions(new Set(addedCultureQuestions));
+      }
+    });
+    return s;
+  }
+
+  const uiSchemaWithCultureQuestions = useMemo(() => getUiSchemaWithCultureQuestions(), []);
 
   return (
     <div>
       <JsonForms
         schema={schema}
-        uischema={schem}
+        uischema={uiSchemaWithCultureQuestions}
         data={data}
         renderers={renderers}
         cells={materialCells}

@@ -14,7 +14,7 @@ export default function ReviewEdit() {
     const dispatch = useAppDispatch();
     const reviewsState = useAppSelector((state) => state.reviewsState);
     const sessionState = useAppSelector(state => state.sessionState);
-    const [review, setReviewHook] = useState<Review>(reviewsState.activeReview || {schemaId: 3});
+    const [review, setReviewHook] = useState<Review | undefined>(reviewsState.activeReview);
     
     const setReview = (review: Review) => {
         if (!reviewId) {
@@ -65,7 +65,13 @@ export default function ReviewEdit() {
 
     const getReviewTemplate = () => (
         <>
-            <ReviewForm data={review} onUpdate={setReview} reviewSchemaId={`${review.schemaId}`} readonly={!!reviewId}/>
+            <ReviewForm 
+                data={review} 
+                onUpdate={setReview} 
+                reviewSchemaId={`${review!.schemaId}`} 
+                readonly={!!reviewId}
+                addRandomCultureQuestions={!reviewId}
+            />
             {!reviewId && <button className='review-edit-submit-button' onClick={onSubmitReview}>Submit</button>}
         </>
     )
@@ -86,7 +92,7 @@ export default function ReviewEdit() {
             {reviewsState.submitReviewLoadState === LoadState.LOADED && <h3>Successfully saved</h3>}
             {reviewsState.submitReviewLoadState === LoadState.ERROR && <h3>Error saving review</h3>}
 
-            {reviewsState.activeReviewLoadState === LoadState.LOADED && getReviewTemplate()}
+            {review && getReviewTemplate()}
 
             {reviewsState.activeReviewLoadState === LoadState.ERROR && <span>Error fetching review</span>}
         </div>

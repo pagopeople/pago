@@ -2,24 +2,25 @@ import React, {useState, ChangeEvent, useEffect} from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { LoadState, ProjectSize, Review } from '../../types';
 
-import './ReviewEdit.css';
-import { getReviewsAsync, getReviewWithIdAsync, resetActiveReviewState, submitReviewAsync } from '../../reducers/ReviewsSlice';
+import './DirectReportReviewEdit.css';
+import { getReviewsAsync, getPeerReviewWithIdAsync, resetActiveReviewState, submitReviewAsync, submitPeerReviewAsync } from '../../reducers/ReviewsSlice';
 import { useParams } from 'react-router-dom';
 import { ColorRing } from 'react-loader-spinner';
 import ReviewForm from '../../components/ReviewForm';
 
-export default function ReviewEdit() {
+export default function DirectReportReviewEdit() {
     // When there is a reviewId then we are in view only mode. This is a completed review.
     const { reviewId } = useParams();
     const dispatch = useAppDispatch();
     const reviewsState = useAppSelector((state) => state.reviewsState);
     const sessionState = useAppSelector(state => state.sessionState);
-    const [review, setReviewHook] = useState<Review | undefined>(reviewsState.activeReview);
+    const [review, setReviewHook] = useState<Review>(reviewsState.activeReview || {schemaId: 'manager'});
     
     const setReview = (review: Review) => {
-        if (!reviewId) {
-            setReviewHook(review);
+        if (JSON.stringify(review) === JSON.stringify({schemaId: 1})) {
+            return;
         }
+        setReviewHook(review);
     }
 
     useEffect(() => {
@@ -30,11 +31,10 @@ export default function ReviewEdit() {
 
     useEffect(() => {
         if (sessionState.loadState === LoadState.LOADED && 
-            reviewsState.activeReviewLoadState === LoadState.INIT || 
-            reviewsState.activeReview?.id !== reviewId) {
-            dispatch(getReviewWithIdAsync({reviewId: reviewId || '', token: sessionState.user.accessToken || ''}))
+            reviewsState.activeReviewLoadState === LoadState.INIT) {
+            dispatch(getPeerReviewWithIdAsync({reviewId: reviewId || '', token: sessionState.user.accessToken || ''}))
         } else if (reviewsState.activeReviewLoadState === LoadState.LOADED) {
-            setReviewHook(reviewsState.activeReview!);
+            setReview(reviewsState.activeReview!);
         }
     }, [sessionState.loadState, reviewsState.activeReviewLoadState]);
 
@@ -59,20 +59,14 @@ export default function ReviewEdit() {
         return (evt: ChangeEvent<HTMLInputElement>) => callback(evt.currentTarget.value);
     }
 
-    const onSubmitReview = () => {
-        dispatch(submitReviewAsync({review: review || {}, token: sessionState.user.accessToken || ''}));
+    const onSubmitPeerReview = () => {
+        dispatch(submitPeerReviewAsync({review: review || {}, token: sessionState.user.accessToken || ''}));
     }
 
     const getReviewTemplate = () => (
         <>
-            <ReviewForm 
-                data={review} 
-                onUpdate={setReview} 
-                reviewSchemaId={`${review!.schemaId}`} 
-                readonly={!!reviewId}
-                addRandomCultureQuestions={!reviewId}
-            />
-            {!reviewId && <button className='review-edit-submit-button' onClick={onSubmitReview}>Submit</button>}
+            <ReviewForm data={review} onUpdate={setReview} reviewSchemaId={'2'}/>
+            {<button className='review-edit-submit-button' onClick={onSubmitPeerReview}>Submit</button>}
         </>
     )
 
@@ -92,7 +86,7 @@ export default function ReviewEdit() {
             {reviewsState.submitReviewLoadState === LoadState.LOADED && <h3>Successfully saved</h3>}
             {reviewsState.submitReviewLoadState === LoadState.ERROR && <h3>Error saving review</h3>}
 
-            {review && getReviewTemplate()}
+            {reviewsState.activeReviewLoadState === LoadState.LOADED && getReviewTemplate()}
 
             {reviewsState.activeReviewLoadState === LoadState.ERROR && <span>Error fetching review</span>}
         </div>

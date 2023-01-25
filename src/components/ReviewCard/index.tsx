@@ -14,7 +14,7 @@ export default function ReviewCard(props: Props) {
     return(
         <div className='review-card-container'>
             <div className='review-card-title'>
-                {review.projectName}
+                {review.projectName} {review.peerReviewId && "(Direct report review)"}
             </div>
             <div className='review-card-description'>
                 {review.projectDescription}

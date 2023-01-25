@@ -5,7 +5,7 @@ import { BsFillPlusCircleFill } from 'react-icons/bs';
 import './Reviews.css';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { useNavigate } from 'react-router-dom';
-import { getReviewsAsync, resetActiveReviewState, startNewReview } from '../../reducers/ReviewsSlice';
+import { getReviewsAsync, startNewReview } from '../../reducers/ReviewsSlice';
 import { LoadState } from '../../types';
 import { ColorRing } from 'react-loader-spinner';
 
@@ -22,16 +22,22 @@ export default function Reviews() {
         }
     }, [sessionState.loadState])
     
-    useEffect(() => {
-        if (reviewsState.activeReview !== undefined && shouldNavigate) {
-            navigate("/review")
-        } else {
-            setShouldNavigate(true);
-        }
-    }, [reviewsState.activeReview]);
+    // useEffect(() => {
+    //     if (reviewsState.activeReview !== undefined && shouldNavigate) {
+    //         navigate("/review")
+    //     } else {
+    //         setShouldNavigate(true);
+    //     }
+    // }, [reviewsState.activeReview]);
 
     const onAddReviewClick = () => {
-        dispatch(startNewReview());
+        dispatch(startNewReview('endproj'));
+        navigate("/review");
+    }
+
+    const onAddMidProjReviewClick = () => {
+        dispatch(startNewReview('midproj'));
+        navigate("/review");
     }
 
     return(
@@ -40,6 +46,9 @@ export default function Reviews() {
                 <h2>
                     Your completed reviews
                 </h2>
+                <div className='reviews-add' onClick={onAddMidProjReviewClick}>
+                    <BsFillPlusCircleFill /> Add a Mid-Project review
+                </div>
                 <div className='reviews-add' onClick={onAddReviewClick}>
                     <BsFillPlusCircleFill /> Add a review
                 </div>

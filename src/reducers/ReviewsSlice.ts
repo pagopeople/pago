@@ -21,6 +21,7 @@ const initialState: ReviewsState  = {
 };
 
 const initialReview: Review = {
+  schemaId: 'endproj',
 }
 
 
@@ -62,6 +63,15 @@ export const getReviewWithIdAsync = createAsyncThunk(
   }
 )
 
+export const getPeerReviewWithIdAsync = createAsyncThunk(
+  'reviewsState/getPeerReview',
+  async (params: {reviewId: string, token: string}) => {
+    const resp = await ReviewService.getPeerReview(params.reviewId, params.token);
+    return resp
+  }
+)
+
+
 export const submitReviewAsync = createAsyncThunk(
   'reviewsState/submitReview',
   async (params: {review: Review, token: string}) => {
@@ -70,16 +80,25 @@ export const submitReviewAsync = createAsyncThunk(
   }
 )
 
+export const submitPeerReviewAsync = createAsyncThunk(
+  'reviewsState/submitPeerReview',
+  async (params: {review: Review, token: string}) => {
+    const resp = await ReviewService.submitPeerReview(params.review, params.token);
+  }
+)
+
 export const reviewsSlice = createSlice({
     name: 'ReviewState',
     initialState,
     reducers: {
-        startNewReview: (state) => {
-            state.activeReview = initialReview;
+        startNewReview: (state, action) => {
+            state.activeReview = {
+              ...initialReview,
+              schemaId: action.payload,
+            };
             state.activeReviewLoadState = LoadState.LOADED;
         },
         resetActiveReviewState: (state) => {
-          console.log('resetting review state');
           state.activeReview = undefined;
           state.activeReviewLoadState = LoadState.INIT;
           state.submitReviewLoadState = LoadState.INIT;
@@ -116,10 +135,21 @@ export const reviewsSlice = createSlice({
         })
         .addCase(getReviewWithIdAsync.fulfilled, (state, action) => {
           state.activeReviewLoadState = LoadState.LOADED;
-          console.log(action);
+          console.log('gr');
           state.activeReview = {...action.payload.review, deadlineDate: parseInt(action.payload.review.deadlineDate) }
         })
         .addCase(getReviewWithIdAsync.rejected, (state, action) => {
+          state.activeReviewLoadState = LoadState.ERROR;
+        })
+        .addCase(getPeerReviewWithIdAsync.pending, (state) => {
+          state.activeReviewLoadState = LoadState.LOADING;
+        })
+        .addCase(getPeerReviewWithIdAsync.fulfilled, (state, action) => {
+          state.activeReviewLoadState = LoadState.LOADED;
+          console.log('gpr')
+          state.activeReview = {...action.payload.review, deadlineDate: parseInt(action.payload.review.deadlineDate), schemaId: '2' }
+        })
+        .addCase(getPeerReviewWithIdAsync.rejected, (state, action) => {
           state.activeReviewLoadState = LoadState.ERROR;
         })
         .addCase(submitReviewAsync.pending, (state) => {
@@ -130,6 +160,15 @@ export const reviewsSlice = createSlice({
           console.log(action);
         })
         .addCase(submitReviewAsync.rejected, (state, action) => {
+          state.submitReviewLoadState = LoadState.ERROR;
+        })
+        .addCase(submitPeerReviewAsync.pending, (state) => {
+          state.submitReviewLoadState = LoadState.LOADING;
+        })
+        .addCase(submitPeerReviewAsync.fulfilled, (state, action) => {
+          state.submitReviewLoadState = LoadState.LOADED;
+        })
+        .addCase(submitPeerReviewAsync.rejected, (state, action) => {
           state.submitReviewLoadState = LoadState.ERROR;
         })
       },

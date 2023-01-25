@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-
 export const get = async (url: string, config: any = {}) => {
     try {
         const resp = await axios.get(url, config);
@@ -20,4 +19,3 @@ export const post = async (url: string, data: any = {}, config: any = {}) => {
         throw e
     }
 };
-

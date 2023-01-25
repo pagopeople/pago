@@ -1,0 +1,120 @@
+{
+    "schemaId": 1,
+    "description": "Mid-Project review",
+    "type": "VerticalLayout",
+    "elements": [
+      {
+        "type": "Control",
+        "scope": "#/properties/projectName"
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/projectDescription",
+        "options": {
+          "multi": true
+        }
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/companyGoal"
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/projectSize"
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/hoursSpent"
+      },
+      {
+        "type": "HorizontalLayout",
+        "elements": [
+          {
+            "type": "Control",
+            "scope": "#/properties/hadDeadline"
+          }
+        ]
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/helpfulScore",
+        "options": {
+            "startHint": "Not close",
+            "endHint": "Exactly what was needed"
+        }
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/clearExpectationsScore",
+        "options": {
+            "startHint": "Mud",
+            "endHint": "Crystal"
+        }
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/managerInvolvementScore",
+        "options": {
+            "startHint": "Not at all",
+            "endHint": "Exactly"
+        }
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/managerExcessiveScore",
+        "options": {
+            "startHint": "Not involved",
+            "endHint": "Constantly involved"
+        }
+      },
+      {
+        "type": "HorizontalLayout",
+        "elements": [
+          {
+            "type": "Control",
+            "scope": "#/properties/withCoworkers"
+          },
+          {
+            "type": "Control",
+            "scope": "#/properties/coworkerId",
+            "rule": {
+              "effect": "HIDE",
+              "condition": {
+                "type": "LEAF",
+                "scope": "#/properties/with_coworkers",
+                "expectedValue": false
+              }
+            }
+          }
+        ]
+      },
+
+      {
+        "type": "Control",
+        "scope": "#/properties/coworkerPerformanceScore",
+        "options": {
+            "startHint": "Poorly",
+            "endHint": "Exceptional"
+        }
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/skillsNeeded"
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/skillScore",
+        "options": {
+            "startHint": "Entry",
+            "endHint": "Expert"
+        }
+      },
+      {
+        "type": "Control",
+        "scope": "#/properties/completionPercentage",
+        "options": {
+          "slider": true
+        }
+      }
+    ]
+  }

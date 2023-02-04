@@ -147,7 +147,7 @@ export const reviewsSlice = createSlice({
         .addCase(getPeerReviewWithIdAsync.fulfilled, (state, action) => {
           state.activeReviewLoadState = LoadState.LOADED;
           console.log('gpr')
-          state.activeReview = {...action.payload.review, deadlineDate: parseInt(action.payload.review.deadlineDate), schemaId: '2' }
+          state.activeReview = {...action.payload.review, deadlineDate: parseInt(action.payload.review.deadlineDate), schemaId: 'manager' }
         })
         .addCase(getPeerReviewWithIdAsync.rejected, (state, action) => {
           state.activeReviewLoadState = LoadState.ERROR;

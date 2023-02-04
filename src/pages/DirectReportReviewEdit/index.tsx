@@ -14,12 +14,12 @@ export default function DirectReportReviewEdit() {
     const dispatch = useAppDispatch();
     const reviewsState = useAppSelector((state) => state.reviewsState);
     const sessionState = useAppSelector(state => state.sessionState);
-    const [review, setReviewHook] = useState<Review>(reviewsState.activeReview || {schemaId: 'manager'});
+    const [review, setReviewHook] = useState<Review | undefined>(reviewsState.activeReview);
     
     const setReview = (review: Review) => {
-        if (JSON.stringify(review) === JSON.stringify({schemaId: 1})) {
-            return;
-        }
+        // if (JSON.stringify(review) === JSON.stringify({schemaId: 'manager'})) {
+        //     return;
+        // }
         setReviewHook(review);
     }
 
@@ -65,7 +65,12 @@ export default function DirectReportReviewEdit() {
 
     const getReviewTemplate = () => (
         <>
-            <ReviewForm data={review} onUpdate={setReview} reviewSchemaId={'2'}/>
+            <ReviewForm 
+                data={review} 
+                onUpdate={setReview} 
+                reviewSchemaId={`${review!.schemaId}`} 
+                addRandomCultureQuestions
+            />
             {<button className='review-edit-submit-button' onClick={onSubmitPeerReview}>Submit</button>}
         </>
     )
@@ -86,7 +91,7 @@ export default function DirectReportReviewEdit() {
             {reviewsState.submitReviewLoadState === LoadState.LOADED && <h3>Successfully saved</h3>}
             {reviewsState.submitReviewLoadState === LoadState.ERROR && <h3>Error saving review</h3>}
 
-            {reviewsState.activeReviewLoadState === LoadState.LOADED && getReviewTemplate()}
+            {review && getReviewTemplate()}
 
             {reviewsState.activeReviewLoadState === LoadState.ERROR && <span>Error fetching review</span>}
         </div>

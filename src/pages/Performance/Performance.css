@@ -1,0 +1,80 @@
+.performance-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.performance-project-size-summaries-container {
+    display: flex;
+    margin-bottom: 32px;
+}
+
+.performance-project-size-summary-container {
+    margin: 8px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.performance-project-size-summary-header {
+    font-size: 36px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.performance-project-size-summary-subText {
+    font-size: 14px;
+    text-align: center;
+}
+
+.performance-employee-score-container {
+    display: flex;
+    margin: 32px 0;
+}
+
+.performance-employee-score-header {
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.performance-employee-score-subtext {
+    font-size: 14px;
+}
+
+.performance-project-size-summary-progress-circle {
+    width: 55%;
+    align-self: center;
+}
+
+.performance-project-recent-reviews {
+    display: flex;
+    flex-direction: column;
+}
+
+.performance-project-recent-review-score {
+    display: flex;
+}
+
+.performance-project-recent-review-circle {
+    width: 100px;
+}
+
+.performance-project-recent-review-impact {
+    display: flex;
+}
+
+.performance-recent-review-summary {
+    display: flex;
+    margin-left: 32px;
+}
+
+.performance-recent-review-impact-subText {
+    font-size: 14px;
+    width: 100px;
+}
+
+.performance-project-recent-review-project-name {
+    align-self: center;
+    font-weight: 700;
+}

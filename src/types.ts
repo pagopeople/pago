@@ -80,4 +80,12 @@ export enum ProjectSize {
     SMALL,
 };
 
-
+export interface ProjectSizeSummary {
+    averageScore: number,
+    employeeScoreImpact: number,
+    recentReviews: Array<{
+        reviewId: string,
+        employeeScoreImpact: number,
+        score: number,
+    }>
+};

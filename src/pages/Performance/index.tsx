@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import ProgressBar from '../../components/ProgressBar';
 import ProgressCircle from '../../components/ProgressCircle';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { reviewsSlice } from '../../reducers/ReviewsSlice';
+import { getReviewsAsync, reviewsSlice } from '../../reducers/ReviewsSlice';
 import { getEmployeeScoreAsync, getSummaryAsync } from '../../reducers/ScoresSlice';
 import { LoadState, ProjectSizeSummary } from '../../types';
+import { Review } from '../../types';
 import './Performance.css';
 
 const projectSizeToDescription = {
@@ -18,13 +19,24 @@ export default function Performance() {
     const dispatch = useAppDispatch();
     const scoresState = useAppSelector((state) => state.scoresState);
     const sessionState = useAppSelector((state) => state.sessionState);
+    const reviewsState = useAppSelector((state) => state.reviewsState);
 
     useEffect(() => {
         if (sessionState.loadState === LoadState.LOADED && scoresState.loadState === LoadState.INIT) {
-            dispatch(getEmployeeScoreAsync(sessionState.user.accessToken || ''));
             dispatch(getSummaryAsync(sessionState.user.accessToken || ''));
         }
+
+        if (sessionState.loadState === LoadState.LOADED && reviewsState.loadState === LoadState.INIT) {
+            dispatch(getReviewsAsync(sessionState.user.accessToken || ''));
+        }
     }, [sessionState.loadState]);
+
+    const reviewsById = useMemo(() => {
+        return reviewsState.completedReviews.reduce((reviews: any, review) => {
+            reviews[review.id!] = review;
+            return reviews;
+        }, {});
+    }, [reviewsState.completedReviews]);
 
 
     const renderProjectSummary = (
@@ -104,7 +116,9 @@ export default function Performance() {
                      <h2>No reviews of this size yet</h2>}
                 </div>
                 {projectSizeSummary.recentReviews.map(rr => <div className='performance-recent-review-summary'>
-                        <div className='performance-project-recent-review-project-name'>The name of the project</div>
+                        <div className='performance-project-recent-review-project-name'>
+                            {reviewsById[rr.reviewId] ? reviewsById[rr.reviewId].projectName : 'Error loading review details'} 
+                        </div>
                         <div className='performance-project-recent-review-details'>
                             <div className='performance-project-recent-review-impact'>
                                 <div className='performance-project-recent-review-circle'>

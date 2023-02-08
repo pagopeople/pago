@@ -67,7 +67,21 @@ export const getReviewWithIdAsync = createAsyncThunk(
 
 export const getPeerReviewWithIdAsync = createAsyncThunk(
   'reviewsState/getPeerReview',
-  async (params: {reviewId: string, token: string}) => {
+  async (params: {reviewId: string, token: string}, thunkApi) => {
+    const state: any = thunkApi.getState();
+    if (!params.reviewId) {
+      return {
+        review: initialReview,
+      }
+    }
+
+    const loadedReview = state.reviewsState.requestedReviews.find((review: Review) => review.originalReview === params.reviewId);
+
+    if (loadedReview) {
+      return {
+        review: loadedReview,
+      }
+    }
     const resp = await ReviewService.getPeerReview(params.reviewId, params.token);
     return resp
   }

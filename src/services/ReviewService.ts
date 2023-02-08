@@ -62,7 +62,7 @@ class ReviewService {
             }
         };
 
-        return post(this.base_url + `/review/${review.peerReviewId}/peer`, review, config);
+        return post(this.base_url + `/review/${review.originalReview}/peer`, review, config);
     }
 }
 export default new ReviewService("https://72gdmarqte.execute-api.us-west-2.amazonaws.com")

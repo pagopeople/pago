@@ -111,11 +111,11 @@ export default function Performance() {
                             {projectSizeToDescription[projectSize]}
                         </div>
                     </div> 
-                    {projectSizeSummary.recentReviews.length > 0 ?
+                    {projectSizeSummary.recentReviews?.length > 0 ?
                      <ProgressBar progress={(projectSizeSummary.averageScore )/ .10} description={`Your Average ${projectSizeSummary.averageScore}`}/> :
                      <h2>No reviews of this size yet</h2>}
                 </div>
-                {projectSizeSummary.recentReviews.map(rr => <div className='performance-recent-review-summary'>
+                {projectSizeSummary.recentReviews?.map(rr => <div className='performance-recent-review-summary'>
                         <div className='performance-project-recent-review-project-name'>
                             {reviewsById[rr.reviewId] ? reviewsById[rr.reviewId].projectName : 'Error loading review details'} 
                         </div>

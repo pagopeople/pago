@@ -71,6 +71,8 @@ export interface Review {
     submittedBy?: string,
     reviewing?: string,
     createdAt?: number,
+    submittedAt?: number,
+    originalReview?: string,
 }
 
 export enum ProjectSize {

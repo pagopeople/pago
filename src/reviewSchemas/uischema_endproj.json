@@ -16,10 +16,6 @@
       },
       {
         "type": "Control",
-        "scope": "#/properties/companyGoal"
-      },
-      {
-        "type": "Control",
         "scope": "#/properties/projectSize"
       },
       {
@@ -98,49 +94,6 @@
         "options": {
             "startHint": "Not enough",
             "endHint": "Way too much"
-        }
-      },
-      {
-        "type": "HorizontalLayout",
-        "elements": [
-          {
-            "type": "Control",
-            "scope": "#/properties/withCoworkers",
-            "label": "Did you work on this project with any coworkers?"
-          },
-          {
-            "type": "Control",
-            "scope": "#/properties/coworkerId",
-            "rule": {
-              "effect": "HIDE",
-              "condition": {
-                "type": "LEAF",
-                "scope": "#/properties/withCoworkers",
-                "expectedValue": false
-              }
-            }
-          }
-        ]
-      },
-
-      {
-        "type": "Control",
-        "scope": "#/properties/coworkerPerformanceScore",
-        "options": {
-            "startHint": "Poorly",
-            "endHint": "Exceptional"
-        }
-      },
-      {
-        "type": "Control",
-        "scope": "#/properties/skillsNeeded"
-      },
-      {
-        "type": "Control",
-        "scope": "#/properties/skillScore",
-        "options": {
-            "startHint": "Entry",
-            "endHint": "Expert"
         }
       },
       {

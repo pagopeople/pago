@@ -16,10 +16,6 @@
       },
       {
         "type": "Control",
-        "scope": "#/properties/companyGoal"
-      },
-      {
-        "type": "Control",
         "scope": "#/properties/projectSize"
       },
       {
@@ -90,18 +86,6 @@
       {
         "type": "Control",
         "scope": "#/properties/badJob"
-      },
-      {
-        "type": "Control",
-        "scope": "#/properties/skillsNeeded"
-      },
-      {
-        "type": "Control",
-        "scope": "#/properties/withCoworkersScore",
-        "options": {
-            "startHint": "Poorly",
-            "endHint": "Exceptional"
-        }
       },
       {
         "type": "Control",

@@ -44,7 +44,7 @@ export default function Reviews() {
         <div className='reviews-container'>
             <div className='reviews-header'>
                 <h2>
-                    Your completed reviews
+                    Your reviews
                 </h2>
                 <div className='reviews-add' onClick={onAddMidProjReviewClick}>
                     <BsFillPlusCircleFill /> Add a Mid-Project review
@@ -62,6 +62,21 @@ export default function Reviews() {
                 wrapperClass="blocks-wrapper"
                 colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
             />
+            <h3>
+                Review Requests
+            </h3>
+            {
+                reviewsState.requestedReviews.map((review) => 
+                    <span onClick={() => navigate(`/review/${review.originalReview}/direct_report`)}>
+                        <ReviewCard review={review} key={review.id} />
+                    </span>
+                )
+            }
+
+            <h3>
+                Completed reviews
+            </h3>
+            
             
             {
                 reviewsState.completedReviews.map((review) => 

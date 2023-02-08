@@ -7,6 +7,7 @@ import ReviewService from '../services/ReviewService';
 interface ReviewsState {
     loadState: LoadState,
     completedReviews: Review[],
+    requestedReviews: Review[],
     activeReview: Review | undefined,
     activeReviewLoadState: LoadState,
     submitReviewLoadState: LoadState,
@@ -15,6 +16,7 @@ interface ReviewsState {
 const initialState: ReviewsState  = {
     loadState: LoadState.INIT,
     completedReviews: [],
+    requestedReviews: [],
     activeReview: undefined,
     activeReviewLoadState: LoadState.INIT,
     submitReviewLoadState: LoadState.INIT,
@@ -120,11 +122,17 @@ export const reviewsSlice = createSlice({
         })
         .addCase(getReviewsAsync.fulfilled, (state, action) => {
           state.loadState = LoadState.LOADED;
-          state.completedReviews = action.payload.reviews;
+          state.completedReviews = action.payload.completedReviews;
           state.completedReviews.sort((r1, r2) => {
-            const createdAt1 = r1.createdAt || 0;
-            const createdAt2 = r2.createdAt || 0;
-            return createdAt2 - createdAt1;
+            const submittedAt1 = r1.submittedAt || 0;
+            const submittedAt2 = r2.submittedAt || 0;
+            return submittedAt2 - submittedAt1;
+          })
+          state.requestedReviews = action.payload.requestedReviews;
+          state.requestedReviews.sort((r1, r2) => {
+            const submittedAt1 = r1.submittedAt || 0;
+            const submittedAt2 = r2.submittedAt || 0;
+            return submittedAt2 - submittedAt1;
           })
         })
         .addCase(getReviewsAsync.rejected, (state, action) => {
@@ -146,7 +154,6 @@ export const reviewsSlice = createSlice({
         })
         .addCase(getPeerReviewWithIdAsync.fulfilled, (state, action) => {
           state.activeReviewLoadState = LoadState.LOADED;
-          console.log('gpr')
           state.activeReview = {...action.payload.review, deadlineDate: parseInt(action.payload.review.deadlineDate), schemaId: 'manager' }
         })
         .addCase(getPeerReviewWithIdAsync.rejected, (state, action) => {

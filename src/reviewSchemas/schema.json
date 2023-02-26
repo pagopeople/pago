@@ -258,6 +258,30 @@
       },
      "impressedScore": {
         "type": "number"
+      },
+      "managerValuableScore": {
+        "type": "number"
+      },
+      "managerEmployeeMeetDeadline": {
+        "type": "boolean"
+      },
+      "managerEmployeeMeetDeadlineReason": {
+        "type": "string"
+      },
+      "managerExpectationsChanged": {
+        "type": "boolean"
+      },
+      "managerEmployeeWorkHelpfulScore": {
+        "type": "number"
+      },
+      "managerExpectationsClearScore": {
+        "type": "number"
+      },
+      "manageEmployeeWithCoworkersScore": {
+        "type": "number"
+      },
+      "managerCompletionPercentageAccurate": {
+        "type": "boolean"
       }
     }  
   }

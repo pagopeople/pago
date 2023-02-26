@@ -32,7 +32,7 @@ export default function DirectReportReviewEdit() {
     useEffect(() => {
         if (sessionState.loadState === LoadState.LOADED && 
             reviewsState.activeReviewLoadState === LoadState.INIT) {
-            dispatch(getPeerReviewWithIdAsync({reviewId: reviewId || '', token: sessionState.user.accessToken || ''}))
+            dispatch(getPeerReviewWithIdAsync(reviewId || ''))
         } else if (reviewsState.activeReviewLoadState === LoadState.LOADED) {
             setReview(reviewsState.activeReview!);
         }
@@ -40,7 +40,7 @@ export default function DirectReportReviewEdit() {
 
     useEffect(() => {
         if (reviewsState.submitReviewLoadState === LoadState.LOADED) {
-            dispatch(getReviewsAsync(sessionState.user.accessToken || ''))
+            dispatch(getReviewsAsync())
         }
     }, [reviewsState.submitReviewLoadState]);
     
@@ -60,7 +60,7 @@ export default function DirectReportReviewEdit() {
     }
 
     const onSubmitPeerReview = () => {
-        dispatch(submitPeerReviewAsync({review: review || {}, token: sessionState.user.accessToken || ''}));
+        dispatch(submitPeerReviewAsync(review || {}));
     }
 
     const getReviewTemplate = () => (

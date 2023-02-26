@@ -1,9 +1,28 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import { configureStore, ThunkAction, Action, getDefaultMiddleware, Store } from '@reduxjs/toolkit';
+import { PagoApi } from '../api/PagoApi';
 
 import rootReducer from '../reducers/rootReducer';
+import { getApiUrl } from '../utils';
+
+const base_url = getApiUrl(window.location.href);
+
+interface MiddlewareType {
+  thunk: {
+    extraArgument: {
+      api: (state:any) => PagoApi,
+    }
+  }
+}
 
 const store = configureStore({
-    reducer: rootReducer
+    reducer: rootReducer,
+    middleware: getDefaultMiddleware => getDefaultMiddleware<MiddlewareType>({
+      thunk: {
+        extraArgument: {
+          api: (state) => new PagoApi(state, base_url),
+        }
+      }
+    }),
 });
 
 // const sessionIdFromStorage = localStorage.getItem('sessionId');

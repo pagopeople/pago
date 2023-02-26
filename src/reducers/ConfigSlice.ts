@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { Config, LoadState } from '../types';
-import ConfigService from '../services/ConfigService';
+import { Config, LoadState, ThunkApiType } from '../types';
+import ConfigService from '../api/ConfigService';
 
 
 interface ConfigState {
@@ -14,10 +14,11 @@ const initialState: ConfigState  = {
 };
 
 
-export const getConfigAsync = createAsyncThunk(
+export const getConfigAsync = createAsyncThunk<Config, void, ThunkApiType>(
     'configState/getConfig',
-    async () => {
-      const response = await ConfigService.fetchConfig();
+    async (_, thunkApi) => {
+      const state = thunkApi.getState();
+      const response = await thunkApi.extra.api(state).configService.get();
       return response;
     }
 );
@@ -33,7 +34,7 @@ export const configSlice = createSlice({
           })
           .addCase(getConfigAsync.fulfilled, (state, action) => {
             state.loadState = LoadState.LOADED;
-            state.config = action.payload.config
+            state.config = action.payload;
           })
           .addCase(getConfigAsync.rejected, (state, action) => {
             state.loadState = LoadState.ERROR;

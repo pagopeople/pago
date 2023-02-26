@@ -1,8 +1,9 @@
 import schema from './schema.json';
 import uischema_midproj from './uischema_midproj.json';
 import uischema_endproj from './uischema_endproj.json';
-import uischema_manager from './uischema_manager.json';
+import uischema_endproj_manager from './uischema_endproj_manager.json';
 import uischema_culture from './uischema_culture.json';
+import uischema_midproj_manager from './uischema_midproj_manager.json';
 
 
 class SchemaFetcher {
@@ -11,9 +12,10 @@ class SchemaFetcher {
         '1': uischema_midproj,
         'endproj': uischema_endproj,
         '2': uischema_endproj,
-        'manager': uischema_manager,
-        '3': uischema_manager,
+        'endproj_manager': uischema_endproj_manager,
+        '3': uischema_endproj_manager,
         'culture': uischema_culture,
+        'midproj_manager': uischema_midproj_manager,
     };
 
     getJsonSchema() {

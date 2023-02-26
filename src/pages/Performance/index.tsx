@@ -23,11 +23,11 @@ export default function Performance() {
 
     useEffect(() => {
         if (sessionState.loadState === LoadState.LOADED && scoresState.loadState === LoadState.INIT) {
-            dispatch(getSummaryAsync(sessionState.user.accessToken || ''));
+            dispatch(getSummaryAsync());
         }
 
         if (sessionState.loadState === LoadState.LOADED && reviewsState.loadState === LoadState.INIT) {
-            dispatch(getReviewsAsync(sessionState.user.accessToken || ''));
+            dispatch(getReviewsAsync());
         }
     }, [sessionState.loadState]);
 

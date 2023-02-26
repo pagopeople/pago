@@ -14,9 +14,8 @@ import {
     CognitoAccessToken,
     CognitoRefreshToken,
 } from 'amazon-cognito-identity-js';
-import { config } from 'process';
 import { exchangeCodeForTokenAsync, updateUserFromCachedSession, setAuthState } from '../../reducers/SessionSlice';
-import axios from 'axios';
+import { getAuthRedirectUrl } from '../../utils';
 
 export default function AppContainer() {
     const dispatch = useAppDispatch();
@@ -27,12 +26,10 @@ export default function AppContainer() {
     const userPoolRef = useRef<CognitoUserPool>();
     const userRef = useRef<CognitoUser>();
 
-
     useEffect(() => {
         if (configState.loadState === LoadState.INIT) {
             dispatch(getConfigAsync());
         } else if (configState.loadState === LoadState.LOADED) {
-
             const poolData = {
                 UserPoolId: configState.config?.userPoolId || '',
                 ClientId: configState.config?.userPoolClientId || '',
@@ -68,6 +65,8 @@ export default function AppContainer() {
                     console.log("error signing out", err)
 
                 }});
+            } else {
+                window.location.href = "https://pagopeople.auth.us-west-2.amazoncognito.com/login?client_id=7j9ia5g0m389dgs9j2j6nnlqqd&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=" + getRedirectUri();
             }
         }
     }, [sessionState.authState])
@@ -116,7 +115,7 @@ export default function AppContainer() {
 
     return (
         <>
-            <Navbar />
+            {configState.loadState === LoadState.LOADED && <Navbar /> }
             <ColorRing
                 visible={configState.loadState === LoadState.LOADING }
                 height="80"
@@ -128,6 +127,7 @@ export default function AppContainer() {
             />
 
             { configState.loadState === LoadState.LOADED && <Outlet /> }
+            { configState.loadState === LoadState.ERROR && <p>Tenant not found</p>}
         </>
     )
 

@@ -18,7 +18,7 @@ export default function Reviews() {
     
     useEffect(() => {
         if (sessionState.loadState === LoadState.LOADED && reviewsState.loadState === LoadState.INIT) {
-            dispatch(getReviewsAsync(sessionState.user.accessToken || ''))
+            dispatch(getReviewsAsync())
         }
     }, [sessionState.loadState])
     

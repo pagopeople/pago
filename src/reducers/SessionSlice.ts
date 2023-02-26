@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { AuthState, ExchangeCodeRequest, LoadState, User } from '../types';
-import SessionService from '../services/SessionService';
+import { AuthCodeExchangeResponse, AuthState, ExchangeCodeRequest, LoadState, ThunkApiType, User } from '../types';
+import SessionService from '../api/SessionService';
 import { CognitoIdToken, CognitoAccessToken } from 'amazon-cognito-identity-js';
 
 
@@ -16,10 +16,11 @@ const initialState: SessionState  = {
     user: {},
 };
 
-export const exchangeCodeForTokenAsync = createAsyncThunk(
+export const exchangeCodeForTokenAsync = createAsyncThunk<AuthCodeExchangeResponse, ExchangeCodeRequest, ThunkApiType>(
     'sessionState/exchangeCodeForToken',
-    async (req: ExchangeCodeRequest) => {
-        const resp = await SessionService.exchangeCodeForTokens(req.clientId, req.code, req.redirectUrl);
+    async (req, thunkApi) => {
+        const state = thunkApi.getState();
+        const resp = await thunkApi.extra.api(state).sessionService.exchangeCodeForTokens(req.clientId, req.code, req.redirectUrl);
         return resp;
     }
 );

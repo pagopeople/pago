@@ -1,4 +1,6 @@
 import { number } from "prop-types";
+import { PagoApi } from "./api/PagoApi";
+import { RootState } from "./store";
 
 export enum LoadState {
     INIT,
@@ -91,3 +93,18 @@ export interface ProjectSizeSummary {
         score: number,
     }>
 };
+
+export interface ThunkMiddlewareExtraType {
+    api: (state: any) => PagoApi
+}
+
+export interface ThunkApiType {
+    extra: ThunkMiddlewareExtraType,
+    state: RootState,
+};
+
+export interface AuthCodeExchangeResponse {
+    id_token: string,
+    access_token: string,
+    refresh_token: string,
+}

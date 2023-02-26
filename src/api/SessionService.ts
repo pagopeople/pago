@@ -1,12 +1,8 @@
-import { get, post } from './RequestHandler';
+import { AxiosRequestConfig } from "axios";
+import { $Service } from "./Service";
 
 
-class SessionService {
-    base_url: string
-
-    constructor(base_url: string) {
-        this.base_url = base_url
-    }
+export default class SessionService extends $Service {
 
     exchangeCodeForTokens(clientId: string, code: string, redirectUri: string) {
         const data = {
@@ -21,13 +17,13 @@ class SessionService {
         params.append("client_id", clientId);
         const p = params.toString() + `&redirect_uri=${redirectUri}`
         
-        const config = {
+        const config: AxiosRequestConfig = {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-            }
+            },
+            baseURL: "https://pagopeople.auth.us-west-2.amazoncognito.com/oauth2/token",
         }
-        return post(this.base_url + '?' + p, {}, config);
+        return this.client.post('?' + p, {}, config);
     }
 }
-export default new SessionService("https://pagopeople.auth.us-west-2.amazoncognito.com/oauth2/token")
 

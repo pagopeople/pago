@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { Config, LoadState, Review } from '../types';
-import ConfigService from '../services/ConfigService';
-import ReviewService from '../services/ReviewService';
+import { PagoApi } from '../api/PagoApi';
+import { RootState } from '../store';
+import { Config, LoadState, Review, ThunkApiType } from '../types';
 
 
 interface ReviewsState {
@@ -27,79 +27,86 @@ const initialReview: Review = {
 }
 
 
-export const getCompletedReviewAsync = createAsyncThunk(
+export const getCompletedReviewAsync = createAsyncThunk<Review, void, ThunkApiType>(
     'reviewState/getCompletedReview',
-    async () => {
-      const response = await ConfigService.fetchConfig();
+    async (_, thunkApi) => {
+      const state: RootState = thunkApi.getState();
+      const response = thunkApi.extra.api(state).configService.get();
+      // const response = await ConfigService.fetchConfig();
       return response;
     }
 );
 
-export const getReviewsAsync = createAsyncThunk(
+export const getReviewsAsync = createAsyncThunk<{completedReviews: Review[], requestedReviews: Review[]}, void, ThunkApiType>(
   'reviewsState/getReviews',
-  async (token: string) => {
-    const resp = await ReviewService.getReviews(token);
+  async (_, thunkApi) => {
+    const state: RootState = thunkApi.getState();
+    const resp = await thunkApi.extra.api(state).reviewService.getReviews();
     return resp;
   }
 );
 
-export const getReviewWithIdAsync = createAsyncThunk(
+export const getReviewWithIdAsync = createAsyncThunk<Review, string, ThunkApiType>(
   'reviewsState/getReview',
-  async (params: {reviewId: string, token: string}, thunkApi) => {
+  async (reviewId, thunkApi) => {
     const state: any = thunkApi.getState();
-    if (!params.reviewId) {
+
+    if (!reviewId) {
       return {
         review: initialReview,
       }
     }
 
-    const loadedReview = state.reviewsState.completedReviews.find((review: Review) => review.id === params.reviewId);
+    const loadedReview = state.reviewsState.completedReviews.find((review: Review) => review.id === reviewId);
 
     if (loadedReview) {
       return {
         review: loadedReview,
       }
     }
-    const resp = await ReviewService.getReview(params.reviewId, params.token);
+    const resp = await thunkApi.extra.api(state).reviewService.getReview(reviewId);
     return resp
   }
 )
 
-export const getPeerReviewWithIdAsync = createAsyncThunk(
+export const getPeerReviewWithIdAsync = createAsyncThunk<Review, string, ThunkApiType>(
   'reviewsState/getPeerReview',
-  async (params: {reviewId: string, token: string}, thunkApi) => {
+  async (reviewId, thunkApi) => {
     const state: any = thunkApi.getState();
-    if (!params.reviewId) {
+    if (!reviewId) {
       return {
         review: initialReview,
       }
     }
 
-    const loadedReview = state.reviewsState.requestedReviews.find((review: Review) => review.originalReview === params.reviewId);
+    const loadedReview = state.reviewsState.requestedReviews.find((review: Review) => review.originalReview === reviewId);
 
     if (loadedReview) {
       return {
         review: loadedReview,
       }
     }
-    const resp = await ReviewService.getPeerReview(params.reviewId, params.token);
+    const resp = await thunkApi.extra.api(state).reviewService.getPeerReview(reviewId);
     return resp
   }
 )
 
 
-export const submitReviewAsync = createAsyncThunk(
+export const submitReviewAsync = createAsyncThunk<void, Review, ThunkApiType>(
   'reviewsState/submitReview',
-  async (params: {review: Review, token: string}) => {
-    const resp = await ReviewService.submitReview(params.review, params.token);
+  async (review, thunkApi) => {
+    const state = thunkApi.getState();
+    const resp = await thunkApi.extra.api(state).reviewService.submitReview(review);
     return resp;
   }
 )
 
-export const submitPeerReviewAsync = createAsyncThunk(
+export const submitPeerReviewAsync = createAsyncThunk<void, Review, ThunkApiType>(
   'reviewsState/submitPeerReview',
-  async (params: {review: Review, token: string}) => {
-    const resp = await ReviewService.submitPeerReview(params.review, params.token);
+  async (review, thunkApi) => {
+    const state = thunkApi.getState();
+    const resp = await thunkApi.extra.api(state).reviewService.submitPeerReview(review);
+    return resp;
   }
 )
 
@@ -157,8 +164,7 @@ export const reviewsSlice = createSlice({
         })
         .addCase(getReviewWithIdAsync.fulfilled, (state, action) => {
           state.activeReviewLoadState = LoadState.LOADED;
-          console.log('gr');
-          state.activeReview = {...action.payload.review, deadlineDate: parseInt(action.payload.review.deadlineDate) }
+          state.activeReview = {...action.payload, deadlineDate: parseInt(action.payload.deadlineDate as any) }
         })
         .addCase(getReviewWithIdAsync.rejected, (state, action) => {
           state.activeReviewLoadState = LoadState.ERROR;
@@ -168,7 +174,7 @@ export const reviewsSlice = createSlice({
         })
         .addCase(getPeerReviewWithIdAsync.fulfilled, (state, action) => {
           state.activeReviewLoadState = LoadState.LOADED;
-          state.activeReview = {...action.payload.review, deadlineDate: parseInt(action.payload.review.deadlineDate), schemaId: 'manager' }
+          state.activeReview = {...action.payload, deadlineDate: parseInt(action.payload.deadlineDate as any || "0") }
         })
         .addCase(getPeerReviewWithIdAsync.rejected, (state, action) => {
           state.activeReviewLoadState = LoadState.ERROR;

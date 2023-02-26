@@ -32,7 +32,7 @@ export default function ReviewEdit() {
         if (sessionState.loadState === LoadState.LOADED && 
             reviewsState.activeReviewLoadState === LoadState.INIT || 
             reviewsState.activeReview?.id !== reviewId) {
-            dispatch(getReviewWithIdAsync({reviewId: reviewId || '', token: sessionState.user.accessToken || ''}))
+            dispatch(getReviewWithIdAsync(reviewId || ''));
         } else if (reviewsState.activeReviewLoadState === LoadState.LOADED) {
             setReviewHook(reviewsState.activeReview!);
         }
@@ -40,7 +40,7 @@ export default function ReviewEdit() {
 
     useEffect(() => {
         if (reviewsState.submitReviewLoadState === LoadState.LOADED) {
-            dispatch(getReviewsAsync(sessionState.user.accessToken || ''))
+            dispatch(getReviewsAsync())
         }
     }, [reviewsState.submitReviewLoadState]);
     
@@ -60,7 +60,7 @@ export default function ReviewEdit() {
     }
 
     const onSubmitReview = () => {
-        dispatch(submitReviewAsync({review: review || {}, token: sessionState.user.accessToken || ''}));
+        dispatch(submitReviewAsync(review || {}));
     }
 
     const getReviewTemplate = () => (

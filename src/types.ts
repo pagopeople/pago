@@ -27,7 +27,16 @@ export interface User {
     familyName?: string,
     givenName?: string,
     username?: string,
+    email?: string,
+    role?: Role, 
+    enabled?: boolean,
 };
+
+export enum Role {
+    SystemAdmin = "SystemAdmin",
+    TenantAdmin = "TenantAdmin",
+    TenantUser = "TenantUser",
+}
 
 export interface ExchangeCodeRequest {
     code: string,
@@ -101,7 +110,7 @@ export interface ThunkMiddlewareExtraType {
 export interface ThunkApiType {
     extra: ThunkMiddlewareExtraType,
     state: RootState,
-};
+}
 
 export interface AuthCodeExchangeResponse {
     id_token: string,

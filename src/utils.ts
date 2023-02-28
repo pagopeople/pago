@@ -5,15 +5,15 @@ const isLocalHost = (url: string) => {
 
 export const getApiUrl = (href: string) => {
     if (isLocalHost(href)) {
-        return "https://testing.api.pagopeople.com"
+        return "https://monte.api.pagopeople.com"
     }
-    const subdomain = href.split(".")
+    const subdomain = href.split(".")[0]
     return `${subdomain}.api.pagopeople.com`
 }
 
 export const getAuthRedirectUrl = (href: string) => {
     if (isLocalHost(href)) {
-        return "https://testing.pagopeople.com"
+        return "https://monte.pagopeople.com"
     }
     const subdomain = href.split(".")
     return `${subdomain}.pagopeople.com`

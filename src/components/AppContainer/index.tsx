@@ -57,16 +57,16 @@ export default function AppContainer() {
             console.log('user unauth, redirecting')
             if (userRef.current) {
                 userRef.current.globalSignOut({onSuccess: (msg: string) => {
-                    console.log("Signed out", msg)
-                    window.location.href = "https://pagopeople.auth.us-west-2.amazoncognito.com/login?client_id=7j9ia5g0m389dgs9j2j6nnlqqd&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=" + getRedirectUri();
-
+                    const userPoolClientId = configState.config?.userPoolClientId
+                    window.location.href = `https://pagopeople.auth.us-west-2.amazoncognito.com/login?client_id=${userPoolClientId}&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=${getRedirectUri()}`;
                 },
                 onFailure: (err: Error) => {
                     console.log("error signing out", err)
 
                 }});
             } else {
-                window.location.href = "https://pagopeople.auth.us-west-2.amazoncognito.com/login?client_id=7j9ia5g0m389dgs9j2j6nnlqqd&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=" + getRedirectUri();
+                const userPoolClientId = configState.config?.userPoolClientId
+                window.location.href = `https://pagopeople.auth.us-west-2.amazoncognito.com/login?client_id=${userPoolClientId}&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=${getRedirectUri()}`;
             }
         }
     }, [sessionState.authState])

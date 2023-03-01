@@ -30,3 +30,7 @@ export interface PresignedUrl {
     },
     url: string,
 }
+
+export interface GetCompDataResponse {
+    salary: number,
+}

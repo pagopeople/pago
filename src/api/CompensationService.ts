@@ -25,5 +25,9 @@ export default class CompensationService extends $Service {
 
         return this.client.post('', data, config);
     }
+
+    getCompData() {
+        return this.client.get("/compensation", {})
+    }
 }
 

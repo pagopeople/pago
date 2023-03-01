@@ -19,3 +19,13 @@
     display: flex;
 }
 
+.account-upload-data-buttons {
+    display: flex;
+}
+
+.account-upload-data-button {
+    flex-grow: 1;
+    margin: 16px;
+}
+
+

@@ -5,6 +5,7 @@ import ReviewService from "./ReviewService";
 import ScoresService from "./ScoresService";
 import SessionService from "./SessionService";
 import UserService from "./UserService";
+import CompensationService from "./CompensationService";
 
 export class PagoApi {
     configService: ConfigService;
@@ -12,6 +13,7 @@ export class PagoApi {
     sessionService: SessionService;
     scoresService: ScoresService;
     userService: UserService;
+    compensationService: CompensationService;
 
     // Can't use RootState type due to circular reference.
     constructor(state: any, baseURL: string) {
@@ -29,6 +31,7 @@ export class PagoApi {
         this.sessionService = new SessionService(requestHandler);
         this.scoresService = new ScoresService(requestHandler);
         this.userService = new UserService(requestHandler);
+        this.compensationService = new CompensationService(requestHandler);
     }
 }
 

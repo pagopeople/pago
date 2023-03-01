@@ -8,6 +8,8 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, D
 
 import './Account.css';
 import { getRolesAsList } from '../../utils';
+import { getUploadUrlAsync, uploadCompDataAsync } from '../../reducers/CompensationSlice';
+import { useFilePicker } from 'use-file-picker';
 
 const customStyles = {
     content: {
@@ -42,11 +44,20 @@ export default function Account() {
     const [isInviteUsersModalOpen, setisInviteUsersModalOpen] = useState(false);
     const [inviteUserRequest, setInviteUserRequest] = useState<InviteUserRequest>({role: Role.TenantUser});
     const  [validation, setValidation] = useState<InviteUserRequestValidation>(defaultInviteUserRequestValidation);
+    const [file, setFile] = useState<File | null>(null)
+    const [openFileSelector, {filesContent, loading}] = useFilePicker({
+        accept: '.csv',
+    });
+
     useEffect(() => {
         if (usersState.loadState === LoadState.INIT) {
-            dispatch(getUsersAsync());
+            // dispatch(getUsersAsync());
         }
     }, [usersState.loadState]);
+
+    useEffect(() => {
+        console.log("filesContent", loading, filesContent)
+    }, [filesContent.length])
 
     const renderUser = (user: User) => {
         return (
@@ -97,20 +108,6 @@ export default function Account() {
         return allValid;
     }
 
-    const renderUsers = () => {
-        return(
-            <div className='account-users-card'>
-                <div className='account-users-card-header'>
-                    <h2>Users</h2>
-                    <button onClick={onInviteClick}>Invite Users</button>
-                </div>
-                <div className='account-users-list'>
-                    {usersState.users.map(usr => renderUser(usr))}
-                </div>
-            </div>
-        )
-    }
-
     const onRoleUpdate = (e: SelectChangeEvent<Role>) => {
         const val = e.target.value as keyof typeof Role;
         setInviteUserRequest({...inviteUserRequest, role: Role[val]})
@@ -126,14 +123,39 @@ export default function Account() {
         }
     }
 
+    const onUploadCompClick = () => {
+        // openFileSelector();
+        console.log(file);
+        // dispatch(getUploadUrlAsync());
+        if (file)
+        dispatch(uploadCompDataAsync(file));
+    }
+
+    const onFileSelect = (e: ChangeEvent<HTMLInputElement> ) => {
+        if (e.target.files) {
+            console.log("setting file", e)
+            setFile(e.target.files[0]);
+        } else {
+            console.log("no files")
+        }
+    }
+
+    const renderUsers = () => {
+        return(
+            <div className='account-users-card'>
+                <div className='account-users-card-header'>
+                    <h2>Users</h2>
+                    <button onClick={onInviteClick}>Invite Users</button>
+                </div>
+                <div className='account-users-list'>
+                    {usersState.users.map(usr => renderUser(usr))}
+                </div>
+            </div>
+        )
+    }
+
     return(
         <div>
-            Account
-            
-            {(usersState.loadState === LoadState.LOADED) &&
-                renderUsers()
-            }
-
             <ColorRing
                 visible={usersState.loadState === LoadState.LOADING}
                 height="80"
@@ -143,6 +165,30 @@ export default function Account() {
                 wrapperClass="blocks-wrapper"
                 colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
             />
+
+            <div className='account-upload-data-buttons'>
+                <input type="file" accept="csv" onChange={onFileSelect}/>
+                <Button
+                    className='account-upload-data-button'
+                    variant="contained" 
+                    sx={{background: "#041F4C"}}
+                    onClick={onUploadCompClick}
+                >
+                    Upload compensation data
+                </Button>
+                
+                <Button
+                    className='account-upload-data-button'
+                    variant="contained" 
+                    sx={{background: "#041F4C"}}
+                >
+                    Upload org chart data
+                </Button>
+            </div>
+            
+            {(true || usersState.loadState === LoadState.LOADED) &&
+                renderUsers()
+            }
 
             <Dialog
                 open={isInviteUsersModalOpen}

@@ -19,3 +19,14 @@ export interface InviteUserRequest {
     userName?: string,
     tenantId?: string,
 }
+
+export interface PresignedUrl {
+    fields: {
+        "AWSAccessKeyId": string,
+        "key": string,
+        "policy": string,
+        "signature": string,
+        "x-amz-security-token": string
+    },
+    url: string,
+}

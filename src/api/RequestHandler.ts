@@ -37,4 +37,18 @@ export class RequestHandler {
             throw e
         }
     }
+
+    async put(path: string, data: any = {}, config: AxiosRequestConfig = {}) {
+        const _config = {
+            ...this.defaultRequestConfig,
+            ...config,
+        }
+        try {
+            const resp = await axios.put(path, data, _config);
+            return resp.data;
+        } catch(e) {
+            console.log(e);
+            throw e
+        }
+    }
 }

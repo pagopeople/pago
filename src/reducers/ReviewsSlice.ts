@@ -53,7 +53,7 @@ export const getReviewWithIdAsync = createAsyncThunk<Review, string, ThunkApiTyp
 
     if (!reviewId) {
       return {
-        review: initialReview,
+        ...initialReview,
       }
     }
 
@@ -61,7 +61,7 @@ export const getReviewWithIdAsync = createAsyncThunk<Review, string, ThunkApiTyp
 
     if (loadedReview) {
       return {
-        review: loadedReview,
+        ...loadedReview,
       }
     }
     const resp = await thunkApi.extra.api(state).reviewService.getReview(reviewId);

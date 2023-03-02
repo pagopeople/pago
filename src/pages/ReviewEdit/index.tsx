@@ -22,11 +22,11 @@ export default function ReviewEdit() {
         }
     }
 
-    useEffect(() => {
-        return function cleanup() {
-            dispatch(resetActiveReviewState());
-        }
-    }, []);
+    // useEffect(() => {
+    //     return function cleanup() {
+    //         dispatch(resetActiveReviewState());
+    //     }
+    // }, []);
 
     useEffect(() => {
         if (sessionState.loadState === LoadState.LOADED && 

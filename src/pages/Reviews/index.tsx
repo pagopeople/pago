@@ -40,6 +40,10 @@ export default function Reviews() {
         navigate("/review");
     }
 
+    const onReviewClick = () => {
+        
+    }
+
     return(
         <div className='reviews-container'>
             <div className='reviews-header'>

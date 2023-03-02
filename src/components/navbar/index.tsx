@@ -8,7 +8,7 @@ import { setAuthState } from '../../reducers/SessionSlice';
 
 import './Navbar.css';
 import { useAppSelector } from '../../hooks';
-import { AuthState } from '../../types';
+import { AuthState, Role } from '../../types';
 import { useDispatch } from 'react-redux';
 
 
@@ -60,16 +60,16 @@ export default function Navbar() {
                     <NavLink to="/">
                         <span>Home</span>
                     </NavLink> 
-                    <NavLink to="employee">
+                    {/* <NavLink to="employee">
                         <span>Employee Dashboard</span>
-                    </NavLink> 
+                    </NavLink>  */}
                     <NavLink to="pay">
                         <span>Pay</span>
                     </NavLink> 
                     <NavLink to="performance">
                         <span>Performance</span>
                     </NavLink> 
-                    <NavLink to="career">
+                    {/* <NavLink to="career">
                         <span>Career</span>
                     </NavLink> 
                     <NavLink to="skills">
@@ -77,10 +77,10 @@ export default function Navbar() {
                     </NavLink>
                     <NavLink to="improvement">
                         <span>Improvement</span>
-                    </NavLink>
-                    <NavLink to="managers">
+                    </NavLink> */}
+                    {(sessionState.user.role === Role.TenantAdmin || sessionState.user.role === Role.SystemAdmin)  && <NavLink to="managers">
                         <span>Managers</span>
-                    </NavLink> 
+                    </NavLink>}
                 </nav>
                 <Search />
             </div>

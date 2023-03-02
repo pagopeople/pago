@@ -9,6 +9,8 @@ import {
 import NumberRatingControl from '../NumberRating/NumberRatingControl';
 
 import NumberRatingControlTester from '../NumberRating/NumberRatingControlTester';
+import YesNoControlTester from '../JsonSchema/YesNoControlTester';
+import YesNoControl from '../JsonSchema/YesNoControl';
 
 interface Props {
   data: any;
@@ -30,6 +32,7 @@ export default function ReviewForm(props: Props) {
     ...materialRenderers,
     //register custom renderers
     { tester: NumberRatingControlTester, renderer: NumberRatingControl },
+    { tester: YesNoControlTester, renderer: YesNoControl }
   ];
 
   const getFieldNameFromElement = (element: any) => {

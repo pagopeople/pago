@@ -113,9 +113,13 @@ export default function AppContainer() {
         return window.location.origin + "/";
     }
 
+    const showContent = () => 
+        configState.loadState === LoadState.LOADED && sessionState.authState === AuthState.AUTHENTICATED
+    
+
     return (
         <>
-            {configState.loadState === LoadState.LOADED && <Navbar /> }
+            {showContent() && <Navbar /> }
             <ColorRing
                 visible={configState.loadState === LoadState.LOADING }
                 height="80"
@@ -126,7 +130,7 @@ export default function AppContainer() {
                 colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
             />
 
-            { configState.loadState === LoadState.LOADED && <Outlet /> }
+            { showContent() && <Outlet /> }
             { configState.loadState === LoadState.ERROR && <p>Tenant not found</p>}
         </>
     )

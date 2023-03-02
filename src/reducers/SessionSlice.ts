@@ -44,6 +44,7 @@ export const sessionSlice = createSlice({
                 username: idTokenPayload['cognito:username'],
                 givenName: idTokenPayload.given_name,
                 familyName: idTokenPayload.family_name,
+                role: idTokenPayload['custom:userRole'],
             }
         },
         setAuthState: (state, action) => {
@@ -66,6 +67,7 @@ export const sessionSlice = createSlice({
                 username: idTokenPayload['cognito:username'],
                 givenName: idTokenPayload.given_name,
                 familyName: idTokenPayload.family_name,
+                role: idTokenPayload['custom:userRole'],
             }
           })
           .addCase(exchangeCodeForTokenAsync.rejected, (state, action) => {

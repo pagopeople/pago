@@ -45,19 +45,13 @@ export default function Account() {
     const [inviteUserRequest, setInviteUserRequest] = useState<InviteUserRequest>({role: Role.TenantUser});
     const  [validation, setValidation] = useState<InviteUserRequestValidation>(defaultInviteUserRequestValidation);
     const [file, setFile] = useState<File | null>(null)
-    const [openFileSelector, {filesContent, loading}] = useFilePicker({
-        accept: '.csv',
-    });
+
 
     useEffect(() => {
         if (usersState.loadState === LoadState.INIT) {
-            // dispatch(getUsersAsync());
+            dispatch(getUsersAsync());
         }
     }, [usersState.loadState]);
-
-    useEffect(() => {
-        console.log("filesContent", loading, filesContent)
-    }, [filesContent.length])
 
     const renderUser = (user: User) => {
         return (
@@ -124,19 +118,14 @@ export default function Account() {
     }
 
     const onUploadCompClick = () => {
-        // openFileSelector();
-        console.log(file);
-        // dispatch(getUploadUrlAsync());
-        if (file)
-        dispatch(uploadCompDataAsync(file));
+        if (file) {
+            dispatch(uploadCompDataAsync(file));
+        }
     }
 
     const onFileSelect = (e: ChangeEvent<HTMLInputElement> ) => {
         if (e.target.files) {
-            console.log("setting file", e)
             setFile(e.target.files[0]);
-        } else {
-            console.log("no files")
         }
     }
 

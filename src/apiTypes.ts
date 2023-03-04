@@ -33,4 +33,17 @@ export interface PresignedUrl {
 
 export interface GetCompDataResponse {
     salary: number,
+};
+
+export interface BudgetDataResponse {
+    email: string,
+    given_name: string,
+    family_name: string,
+    salary: number,
+    score: number,
+    manager_name?: string,
+}
+
+export interface GetBudgetDataResponse {
+    employees: Array<BudgetDataResponse>;
 }

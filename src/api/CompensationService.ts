@@ -27,7 +27,11 @@ export default class CompensationService extends $Service {
     }
 
     getCompData() {
-        return this.client.get("/compensation", {})
+        return this.client.get("/compensation", {});
+    }
+
+    getBudgetData() {
+        return this.client.get("/budget", {});
     }
 }
 

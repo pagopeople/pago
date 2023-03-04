@@ -117,3 +117,28 @@ export interface AuthCodeExchangeResponse {
     access_token: string,
     refresh_token: string,
 }
+
+export interface BudgetData {
+    email: string,
+    firstName: string,
+    lastName: string, 
+    salary: number,
+    score: number,
+    managerName?: string,
+}
+
+export interface CompAdjustment {
+    percentage: number,
+    dollarAmt: number,
+};
+
+export interface AppliedAdjustment {
+    description: string,
+    adjustmentsByEmail: {[key: string]: CompAdjustment},
+};
+
+export interface MeritIncreaseSetting {
+    scoreStart: number,
+    scoreEnd: number,
+    percentageIncrease: number,
+};

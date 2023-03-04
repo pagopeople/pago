@@ -1,18 +1,21 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { ApiUser, InviteUserRequest, PresignedUrl } from '../apiTypes';
-import { Config, LoadState, ThunkApiType, User } from '../types';
+import { ApiUser, GetBudgetDataResponse, GetCompDataResponse, InviteUserRequest, PresignedUrl } from '../apiTypes';
+import { BudgetData, Config, LoadState, ThunkApiType, User } from '../types';
 
 
 interface CompensationState {
     loadState: LoadState,
     uploadDataLoadState: LoadState,
+    budgetLoadState: LoadState,
     uploadUrl: string,
-    salary?: number
+    salary?: number,
+    budgetData?: BudgetData[],
 };
 
 const initialState: CompensationState  = {
     loadState: LoadState.INIT,
     uploadDataLoadState: LoadState.INIT,
+    budgetLoadState: LoadState.INIT,
     uploadUrl: '',
 };
 
@@ -36,7 +39,7 @@ export const uploadCompDataAsync = createAsyncThunk<void, File, ThunkApiType>(
     }
 );
 
-export const getCompDataAsync = createAsyncThunk<any, void, ThunkApiType>(
+export const getCompDataAsync = createAsyncThunk<GetCompDataResponse, void, ThunkApiType>(
   'compensationState/getCompData',
   async (_, thunkApi) => {
     const state = thunkApi.getState();
@@ -44,6 +47,15 @@ export const getCompDataAsync = createAsyncThunk<any, void, ThunkApiType>(
     return response;
   }
 );
+
+export const getBudgetDataAsync = createAsyncThunk<GetBudgetDataResponse, void, ThunkApiType>(
+  'compensationState/getBudgetData',
+  async (_, thunkApi) => {
+    const state = thunkApi.getState();
+    const response = await thunkApi.extra.api(state).compensationService.getBudgetData();
+    return response;
+  }
+)
 
 export const compensationSlice = createSlice({
     name: 'CompensationState',
@@ -73,6 +85,24 @@ export const compensationSlice = createSlice({
           })
           .addCase(getCompDataAsync.rejected, (state, action) => {
             state.loadState = LoadState.ERROR;
+          })
+          .addCase(getBudgetDataAsync.pending, (state) => {
+            state.budgetLoadState = LoadState.LOADING;
+          })
+          .addCase(getBudgetDataAsync.fulfilled, (state, action) => {
+            state.budgetLoadState = LoadState.LOADED;
+            const arr:Array<BudgetData> = action.payload.employees.map(e => ({
+              email: e.email,
+              firstName: e.given_name,
+              lastName: e.family_name,
+              salary: e.salary,
+              score: e.score,
+              managerName: e.manager_name,
+            }));
+            state.budgetData = arr;
+          })
+          .addCase(getBudgetDataAsync.rejected, (state, action) => {
+            state.budgetLoadState = LoadState.ERROR;
           })
       },
 });

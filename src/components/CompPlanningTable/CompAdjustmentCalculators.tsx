@@ -4,7 +4,7 @@ export const percentageAdjustment: (percentage: number, budgetData: BudgetData[]
     const adjustmentsByEmail = budgetData.reduce<{[key: string]: CompAdjustment}>((resp, bd) => {
         const adjustment = {
             percentage,
-            dollarAmt: percentage * bd.salary,
+            dollarAmt: percentage / 100 * bd.salary,
         };
         resp[bd.email] = adjustment;
         return resp;
@@ -22,13 +22,11 @@ export const meritAdjustment: (meritIncreaseSettings: MeritIncreaseSetting[], bu
         return mis ? mis.percentageIncrease : 0;
     };
 
-
-
     const adjustmentsByEmail = budgetData.reduce<{[key: string]: CompAdjustment}>((resp, bd) => {
         const percentage = getPercentageIncrease(bd.score);
         const adjustment = {
             percentage,
-            dollarAmt: percentage * bd.salary,
+            dollarAmt: percentage / 100 * bd.salary,
         };
         resp[bd.email] = adjustment;
         return resp;

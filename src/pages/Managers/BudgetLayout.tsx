@@ -6,6 +6,7 @@ import { meritAdjustment, percentageAdjustment } from '../../components/CompPlan
 import MeritIncreaseEditor from '../../components/CompPlanningTable/MeritIncreaseEditor';
 import ProgressBar from '../../components/ProgressBar';
 import { AppliedAdjustment, BudgetData, MeritIncreaseSetting } from '../../types';
+import { ExportToCsv } from 'export-to-csv';
 
 import './BudgetLayout.css';
 import { renderInflationIncreaseText, renderMeritIncreaseText, renderPolicyIncreaseText } from './BudgetLayoutDescriptions';
@@ -127,6 +128,39 @@ export default function BudgetLayout() {
         setMarketPercentageIncrease(e.target.valueAsNumber);
     }
 
+    const onExportToCsv = () => {
+
+        const data = sample_data.map(d => {
+            const dataWithAdjustments: {[key: string]: number | string} = {
+                ...d,
+            };
+            let newSalary = d.salary;
+            appliedAdjustments.forEach(aa => {
+                const usrAdjustment = aa.adjustmentsByEmail[d.email];
+                const percentKey = `${aa.dataKey}%`;
+                const dollarKey = `${aa.dataKey}$`;
+                const dollarAmount = usrAdjustment ? usrAdjustment.dollarAmt : 0;
+                dataWithAdjustments[percentKey] = usrAdjustment ? usrAdjustment.percentage : 0;
+                dataWithAdjustments[dollarKey] = dollarAmount;
+                newSalary += dollarAmount;
+            });
+            dataWithAdjustments['newSalary'] = newSalary;
+            return dataWithAdjustments;
+        });
+
+        const options = { 
+            fieldSeparator: ',',
+            quoteStrings: '"',
+            decimalSeparator: '.',
+            useKeysAsHeaders: true,
+            filename: 'comp_planning',
+        };
+
+        const csvExporter = new ExportToCsv(options);
+
+        csvExporter.generateCsv(data);
+    }
+
     const renderMarketIncreaseEditor = () => {
         return(
             <div>
@@ -235,6 +269,18 @@ export default function BudgetLayout() {
             </div> */}
             
             <CompPlanningTable appliedAdjustments={appliedAdjustments} data={sample_data}/>
+            {appliedAdjustments.length > 0 && 
+                <div className='comp-planning-export'>
+                    <Button
+                        className='comp-planning-export-button'
+                        variant="contained" 
+                        sx={{background: "#041F4C", margin: '16px'}}
+                        onClick={onExportToCsv}
+                    >
+                        Export to CSV
+                    </Button>
+                </div>
+            }
         </div>
     );
 }

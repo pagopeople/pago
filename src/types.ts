@@ -134,6 +134,7 @@ export interface CompAdjustment {
 
 export interface AppliedAdjustment {
     description: string,
+    dataKey: string,
     adjustmentsByEmail: {[key: string]: CompAdjustment},
 };
 

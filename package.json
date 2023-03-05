@@ -24,6 +24,7 @@
     "@types/react-dom": "^18.0.0",
     "amazon-cognito-identity-js": "^6.1.2",
     "axios": "^1.2.2",
+    "export-to-csv": "^0.2.1",
     "react": "^18.2.0",
     "react-circular-progressbar": "^2.1.0",
     "react-datepicker": "^4.8.0",

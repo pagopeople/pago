@@ -12,3 +12,8 @@
 .budget-layout-button {
     margin: 8px;
 }
+
+.comp-planning-export {
+    display: flex;
+    justify-content: flex-end;
+}

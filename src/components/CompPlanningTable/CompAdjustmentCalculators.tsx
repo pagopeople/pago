@@ -11,6 +11,7 @@ export const percentageAdjustment: (percentage: number, budgetData: BudgetData[]
     }, {})
     return ({
         description: 'Market increase',
+        dataKey: 'marketIncrease',
         adjustmentsByEmail,
     } as AppliedAdjustment);
 };
@@ -33,6 +34,7 @@ export const meritAdjustment: (meritIncreaseSettings: MeritIncreaseSetting[], bu
     }, {})
     return ({
         description: 'Merit increase',
+        dataKey: 'meritIncrease',
         adjustmentsByEmail,
     } as AppliedAdjustment);
 }

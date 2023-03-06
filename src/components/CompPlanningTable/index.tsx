@@ -1,7 +1,6 @@
-import React, { ReactNode, useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel } from '@mui/material';
-import { AppliedAdjustment, BudgetData, MeritIncreaseSetting } from '../../types';
-import { percentageAdjustment } from './CompAdjustmentCalculators';
+import React, { useState } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel } from '@mui/material';
+import { CompPlanningData } from '../../types';
 
 
 
@@ -16,12 +15,12 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 }
 type Order = 'asc' | 'desc';
 
-function getComparator<Key extends keyof any>(
+function getComparator<Key extends keyof CompPlanningData>(
     order: Order,
     orderBy: Key,
 ): (
-    a: {[key in Key]: number | string },
-    b: {[key in Key]: number | string },
+    a: CompPlanningData,
+    b: CompPlanningData,
 ) => number {
     return order === 'desc'
         ? (a, b) => descendingComparator(a, b, orderBy)
@@ -29,7 +28,8 @@ function getComparator<Key extends keyof any>(
 }
 
 interface HeaderCell {
-    id: string;
+    id: keyof CompPlanningData;
+    key: string;
     label: string;
     numeric?: boolean;
     disablePadding?: boolean;
@@ -38,55 +38,96 @@ interface HeaderCell {
 const defaultHeaderCells: readonly HeaderCell[] = [
     {
         id: 'firstName',
+        key: 'firstNameHeader',
         label: 'First Name',
     }, 
     {
         id: 'lastName',
+        key: 'lastNameHeader',
         label: 'Last Name',
     },
     {
         id: 'managerName',
+        key: 'managerNameHeader',
         label: 'Manager'
     },
     {
         id: 'score',
+        key: 'scoreHeader',
         label: 'Score',
         numeric: true,
     },
     {
         id: 'salary',
+        key: 'salaryHeader',
         label: 'Salary',
         numeric: true,
     }
 ];
 
 interface CompPlanningTableHeadProps {
-    appliedAdjustments: AppliedAdjustment[];
+    includeMarketAdjustmentColumns: boolean,
+    includeMeritAdjustmentColumns: boolean,
+    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof CompPlanningData) => void;
+    order: Order;
+    orderBy: keyof CompPlanningData;
+
 };
 
 function CompPlanningTableHead(props: CompPlanningTableHeadProps) {
     // const { headers } = props;
-    const { appliedAdjustments } = props;
+    const { 
+        includeMarketAdjustmentColumns,
+        includeMeritAdjustmentColumns,
+        onRequestSort, 
+        order,
+        orderBy,
+    } = props;
     const headerCells = [...defaultHeaderCells];
-    appliedAdjustments.forEach(aa => {
+
+    const createSortHandler =
+    (property: keyof CompPlanningData) => (event: React.MouseEvent<unknown>) => {
+      onRequestSort(event, property);
+    };
+
+    if (includeMarketAdjustmentColumns) {
         headerCells.push({
-            id: `${aa.description}-%`,
-            label: `${aa.description} (%)`,
+            id: `marketIncreasePercent`,
+            key: 'marketIncreasePercentHeader',
+            label: 'Market Increase (%)',
             numeric: true,
         });
         headerCells.push({
-            id: `${aa.description}-$`,
-            label: `${aa.description} ($)`,
-            numeric: true,
-        });
-    });
-    if (appliedAdjustments.length > 0) {
-        headerCells.push({
-            id: 'newSalary',
-            label: 'New Salary',
+            id: 'marketIncreaseDollar',
+            key: 'marketIncreaseDollarHeader',
+            label: 'Market Increase ($)',
             numeric: true,
         });
     }
+
+    if (includeMeritAdjustmentColumns) {
+        headerCells.push({
+            id: `meritIncreasePercent`,
+            key: 'meritIncreasePercentHeader',
+            label: 'Merit Increase (%)',
+            numeric: true,
+        });
+        headerCells.push({
+            id: 'meritIncreaseDollar',
+            key: 'meritIncreaseDollarHeader',
+            label: 'Merit Increase ($)',
+            numeric: true,
+        });
+    }
+
+    
+    headerCells.push({
+        id: 'newSalary',
+        key: 'newSalaryHeader',
+        label: 'New Salary',
+        numeric: true,
+    });
+    
 
     return(
         <TableHead>
@@ -96,8 +137,13 @@ function CompPlanningTableHead(props: CompPlanningTableHeadProps) {
                         id={headerCell.id}
                         // align={headerCell.numeric ? 'right': 'left'}
                         padding={headerCell.disablePadding ? 'none': 'normal'}
+                        key={headerCell.key}
                     >
-                        <TableSortLabel>
+                        <TableSortLabel
+                            active={orderBy === headerCell.id}
+                            direction={orderBy === headerCell.id ? order : 'asc'}
+                            onClick={createSortHandler(headerCell.id)}
+                        >
                             {headerCell.label}
                         </TableSortLabel>
                     </TableCell>
@@ -108,37 +154,53 @@ function CompPlanningTableHead(props: CompPlanningTableHeadProps) {
 };
 
 interface CompPlanningTableProps {
-    appliedAdjustments: AppliedAdjustment[],
-    data: BudgetData[],
+    data: CompPlanningData[];
 }
 
 
 export default function CompPlanningTable(props: CompPlanningTableProps) {
-    const { appliedAdjustments, data } = props; 
-    const getUserCellsForAdjustments = (email: string) => {
-        const cells: ReactNode[] = [];
-        appliedAdjustments.forEach(aa => {
-            const adj = aa.adjustmentsByEmail[email];
-            cells.push(<TableCell>{adj ? adj.percentage : 0}</TableCell>)
-            cells.push(<TableCell>{adj ? adj.dollarAmt : 0}</TableCell>)
-        });
-        return cells;
+    const { 
+        data,
+    } = props; 
+    const [order, setOrder] = React.useState<Order>('asc');
+    const [orderBy, setOrderBy] = React.useState<keyof CompPlanningData>('lastName');  
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [pageNum, setPageNum] = useState(0);
+
+
+    const handleRequestSort = (
+        event: React.MouseEvent<unknown>,
+        property: keyof CompPlanningData,
+    ) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
     };
 
-    const getNewSalaryForUser = (email: string, curSalary: number) => {
-        let newSalary = curSalary;
-        appliedAdjustments.forEach(aa => {
-            newSalary += aa.adjustmentsByEmail[email] ? aa.adjustmentsByEmail[email].dollarAmt : 0;
-        });
-        return newSalary;
-    }
 
+    const handleChangePage = (event: unknown, newPage: number) => {
+        setPageNum(newPage);
+    };
+    
+    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPageNum(0);
+    };
+    
     return(
+        <>
         <TableContainer>
             <Table size={'medium'}>
-                <CompPlanningTableHead appliedAdjustments={appliedAdjustments}/>
+                <CompPlanningTableHead
+                    includeMarketAdjustmentColumns={data.length > 0 && data[0].marketIncreaseDollar !== undefined}
+                    includeMeritAdjustmentColumns={data.length > 0 && data[0].meritIncreaseDollar !== undefined} 
+                    order={order}
+                    orderBy={orderBy}
+                    onRequestSort={handleRequestSort}
+                />
                 <TableBody>
-                    {data.map(bd => {
+                    {data.slice(pageNum * rowsPerPage, pageNum * rowsPerPage + rowsPerPage)
+                        .sort(getComparator(order, orderBy)).map(bd => {
                         return (
                             <TableRow
                                 key={bd.email}
@@ -148,13 +210,35 @@ export default function CompPlanningTable(props: CompPlanningTableProps) {
                                 <TableCell>{bd.managerName}</TableCell>
                                 <TableCell>{bd.score}</TableCell>
                                 <TableCell>{bd.salary}</TableCell>
-                                {getUserCellsForAdjustments(bd.email)}
-                                {appliedAdjustments.length > 0 && <TableCell>{getNewSalaryForUser(bd.email, bd.salary)}</TableCell>}
+                                {bd.marketIncreaseDollar !== undefined &&
+                                    <>
+                                    <TableCell>{bd.marketIncreasePercent || 0}%</TableCell>
+                                    <TableCell>${bd.marketIncreaseDollar || 0}</TableCell>
+                                    </>
+                                }
+                                {bd.meritIncreaseDollar !== undefined &&
+                                    <>
+                                    <TableCell>{bd.meritIncreasePercent || 0}%</TableCell>
+                                    <TableCell>${bd.meritIncreaseDollar || 0}</TableCell>
+                                    </>
+                                }
+                                
+                                <TableCell>{bd.newSalary || bd.salary}</TableCell>
                             </TableRow>
                         )
                     })}
                 </TableBody>
             </Table>
         </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={data.length}
+          rowsPerPage={rowsPerPage}
+          page={pageNum}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+        </>
     );
 }

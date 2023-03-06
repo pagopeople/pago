@@ -134,7 +134,7 @@ export default function MeritIncreaseEditor(props: MeritIncreaseEditorProps) {
             <h4>Merit Increase Settings</h4>
             {meritIncreaseSettings.map((mis, idx) => {
                 return(
-                    <div className='merit-increase-editor-row'>
+                    <div className='merit-increase-editor-row' key={`editorRow${idx}`}>
                         <div>
                             {idx === 0 && <span>Score range</span>}
                             <div 

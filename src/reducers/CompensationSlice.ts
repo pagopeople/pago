@@ -9,7 +9,7 @@ interface CompensationState {
     budgetLoadState: LoadState,
     uploadUrl: string,
     salary?: number,
-    budgetData?: BudgetData[],
+    budgetData: BudgetData[],
 };
 
 const initialState: CompensationState  = {
@@ -17,6 +17,7 @@ const initialState: CompensationState  = {
     uploadDataLoadState: LoadState.INIT,
     budgetLoadState: LoadState.INIT,
     uploadUrl: '',
+    budgetData: [],
 };
 
 
@@ -97,7 +98,7 @@ export const compensationSlice = createSlice({
               lastName: e.family_name,
               salary: e.salary,
               score: e.score,
-              managerName: e.manager_name,
+              managerName: e.manager,
             }));
             state.budgetData = arr;
           })

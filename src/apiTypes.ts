@@ -41,7 +41,7 @@ export interface BudgetDataResponse {
     family_name: string,
     salary: number,
     score: number,
-    manager_name?: string,
+    manager?: string,
 }
 
 export interface GetBudgetDataResponse {

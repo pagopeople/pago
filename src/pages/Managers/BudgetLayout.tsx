@@ -1,15 +1,17 @@
 import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { MdPiano } from 'react-icons/md';
 import CompPlanningTable from '../../components/CompPlanningTable';
-import { meritAdjustment, percentageAdjustment } from '../../components/CompPlanningTable/CompAdjustmentCalculators';
 import MeritIncreaseEditor from '../../components/CompPlanningTable/MeritIncreaseEditor';
 import ProgressBar from '../../components/ProgressBar';
-import { AppliedAdjustment, BudgetData, MeritIncreaseSetting } from '../../types';
+import { BudgetData, CompPlanningData, LoadState, MarketAdjuster, MeritAdjuster, MeritIncreaseSetting } from '../../types';
 import { ExportToCsv } from 'export-to-csv';
 
 import './BudgetLayout.css';
 import { renderInflationIncreaseText, renderMeritIncreaseText, renderPolicyIncreaseText } from './BudgetLayoutDescriptions';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { getBudgetDataAsync } from '../../reducers/CompensationSlice';
+import { ColorRing } from 'react-loader-spinner';
+import { getMeritAdjuster, getPercentageAdjuster } from './CompAdjusters';
 
 const sample_data: BudgetData[] = [
     {
@@ -51,60 +53,90 @@ const defaultMeritIncreaseSettings: MeritIncreaseSetting[] = [
 
 export default function BudgetLayout() {
     type MarketIncreaseType = 'None' | 'Inflation' | 'Percentage';
+    const dispatch = useAppDispatch();
+    const compensationState = useAppSelector(state => state.compensationState);
 
-    const [appliedAdjustments, setAppliedAdjustment] = useState<Array<AppliedAdjustment>>([]); 
-    const [simplePercentage, setSimplePercentage] = useState(.03);
+    const [selectedMarketAdjuster, setSelectedMarketAdjuster] = useState<MarketAdjuster | undefined>(undefined);
+    const [selectedMeritAdjuster, setSelectedMeritAdjuster] = useState<MeritAdjuster | undefined>(undefined);
     const [budget, setBudget] = useState(0);
-    const [budgetUsed, setBudgetUsed] = useState(23456);
+    const [budgetUsed, setBudgetUsed] = useState(0);
     const [showMeritIncrease, setShowMeritIncrease] = useState(false);
     const [showMarketIncrease, setShowMarketIncrease] = useState(false);
     const [marketIncreaseType, setMarketIncreaseType] = useState<MarketIncreaseType>('None');
     const [marketPercentageIncrease, setMarketPercentageIncrease] = useState(0);
     const [meritIncreaseSettings, setMeritIncreaseSettings] = useState<MeritIncreaseSetting[]>(defaultMeritIncreaseSettings);
     const [includeMeritIncrease, setIncludeMeritIncrease] = useState(false);
+    const [compPlanningData, setCompPlanningData] = useState<CompPlanningData[]>(compensationState.budgetData.map(b => ({...b})));
     const inflation = 6.5;
 
+    // Load the comp planning data
+    useEffect(() => {
+        if (compensationState.budgetLoadState === LoadState.INIT) {
+            dispatch(getBudgetDataAsync());
+        }
+    }, [compensationState.budgetLoadState, dispatch]);
+
+    // Update compPlanningData if budgetData changes.
+    useEffect(() => {
+        setCompPlanningData(compensationState.budgetData.map(bd => ({...bd})));
+    }, [compensationState.budgetData])
+
+    // Run the calculations for adjusters as they are updated.
     useEffect(() => {
         let total = 0;
-        sample_data.forEach(sd => {
-            appliedAdjustments.forEach(aa => {
-                total += aa.adjustmentsByEmail[sd.email] ?
-                    aa.adjustmentsByEmail[sd.email].dollarAmt : 0
-            });
-        });
-        setBudgetUsed(total);
-    }, [appliedAdjustments]);
 
-    useEffect(() => {
-        let mpi = marketPercentageIncrease;
-        if (marketIncreaseType === 'Inflation') {
-            setMarketPercentageIncrease(inflation);
-            mpi = inflation;
+        if (selectedMarketAdjuster === undefined && selectedMeritAdjuster === undefined) {
+            return;
         }
 
-        const aa = [];
+        const updatedCompPlanningData = compensationState.budgetData.map(bd => {
+            let newSalary = bd.salary;
+            const cpd: CompPlanningData = {
+                ...bd,
+            };
+            if (selectedMarketAdjuster !== undefined) {
+                const adjustment = selectedMarketAdjuster.apply(cpd);
+                total += adjustment.marketIncreaseDollar;
+                cpd.marketIncreasePercent = adjustment.marketIncreasePercent;
+                cpd.marketIncreaseDollar = adjustment.marketIncreaseDollar;
+                newSalary += adjustment.marketIncreaseDollar;
+            }
+
+            if (selectedMeritAdjuster !== undefined) {
+                const adjustment = selectedMeritAdjuster.apply(cpd);
+                total += adjustment.meritIncreaseDollar;
+                cpd.meritIncreasePercent = adjustment.meritIncreasePercent;
+                cpd.meritIncreaseDollar = adjustment.meritIncreaseDollar;
+                newSalary += adjustment.meritIncreaseDollar;
+            }
+
+            return {
+                ...cpd,
+                newSalary,
+            };
+        });
+        
+        setCompPlanningData(updatedCompPlanningData);
+        setBudgetUsed(total);
+    }, [selectedMarketAdjuster, selectedMeritAdjuster, compensationState.budgetData]);
+
+    // Set percentage back to inflation if the type changes to 'Inflation'
+    useEffect(() => {
+        if (marketIncreaseType === 'Inflation') {
+            setMarketPercentageIncrease(inflation);
+        }
+    }, [marketIncreaseType]);
+
+    // Update adjustments as their selections / settings change.
+    useEffect(() => {        
         if (marketIncreaseType !== 'None') {
-            aa.push(percentageAdjustment(mpi, sample_data));
+            setSelectedMarketAdjuster(getPercentageAdjuster(marketPercentageIncrease));
         }
 
         if (includeMeritIncrease) {
-            aa.push(meritAdjustment(meritIncreaseSettings, sample_data));
+            setSelectedMeritAdjuster(getMeritAdjuster(meritIncreaseSettings));
         }
-
-        setAppliedAdjustment(aa);
     }, [marketIncreaseType, includeMeritIncrease, meritIncreaseSettings, marketPercentageIncrease])
-
-    const onAddMeritIncreaseClick = () => {
-        setAppliedAdjustment([...appliedAdjustments, meritAdjustment(meritIncreaseSettings, sample_data)]);
-    }
-
-    const onAddInflationIncreaseClick = () => {
-        setAppliedAdjustment([...appliedAdjustments, percentageAdjustment(inflation, sample_data)]);
-    }
-
-    const onAddPercentageIncreaseClick = () => {
-        setAppliedAdjustment([...appliedAdjustments, percentageAdjustment(simplePercentage, sample_data)])
-    }
 
     const onBudgetChange = (e: ChangeEvent<HTMLInputElement>) => {
         setBudget(e.target.valueAsNumber);
@@ -130,23 +162,23 @@ export default function BudgetLayout() {
 
     const onExportToCsv = () => {
 
-        const data = sample_data.map(d => {
-            const dataWithAdjustments: {[key: string]: number | string} = {
-                ...d,
-            };
-            let newSalary = d.salary;
-            appliedAdjustments.forEach(aa => {
-                const usrAdjustment = aa.adjustmentsByEmail[d.email];
-                const percentKey = `${aa.dataKey}%`;
-                const dollarKey = `${aa.dataKey}$`;
-                const dollarAmount = usrAdjustment ? usrAdjustment.dollarAmt : 0;
-                dataWithAdjustments[percentKey] = usrAdjustment ? usrAdjustment.percentage : 0;
-                dataWithAdjustments[dollarKey] = dollarAmount;
-                newSalary += dollarAmount;
-            });
-            dataWithAdjustments['newSalary'] = newSalary;
-            return dataWithAdjustments;
-        });
+        // const data = compPlanningData.map(d => {
+        //     const dataWithAdjustments: {[key: string]: number | string} = {
+        //         ...d,
+        //     };
+        //     let newSalary = d.salary;
+        //     appliedAdjustments.forEach(aa => {
+        //         const usrAdjustment = aa.adjustmentsByEmail[d.email];
+        //         const percentKey = `${aa.dataKey}%`;
+        //         const dollarKey = `${aa.dataKey}$`;
+        //         const dollarAmount = usrAdjustment ? usrAdjustment.dollarAmt : 0;
+        //         dataWithAdjustments[percentKey] = usrAdjustment ? usrAdjustment.percentage : 0;
+        //         dataWithAdjustments[dollarKey] = dollarAmount;
+        //         newSalary += dollarAmount;
+        //     });
+        //     dataWithAdjustments['newSalary'] = newSalary;
+        //     return dataWithAdjustments;
+        // });
 
         const options = { 
             fieldSeparator: ',',
@@ -158,7 +190,7 @@ export default function BudgetLayout() {
 
         const csvExporter = new ExportToCsv(options);
 
-        csvExporter.generateCsv(data);
+        csvExporter.generateCsv(compPlanningData);
     }
 
     const renderMarketIncreaseEditor = () => {
@@ -241,35 +273,12 @@ export default function BudgetLayout() {
             </div>
             {showMarketIncrease && renderMarketIncreaseEditor()}
             {showMeritIncrease && renderMeritIncreaseEditor()}
-            {/* <div>
-                <Button
-                    className='account-upload-data-button'
-                    variant="contained" 
-                    sx={{background: "#041F4C"}}
-                    onClick={onAddMeritIncreaseClick}
-                >
-                    Add Merit Increase
-                </Button>
-                <Button
-                    className='account-upload-data-button'
-                    variant="contained" 
-                    sx={{background: "#041F4C"}}
-                    onClick={onAddInflationIncreaseClick}
-                >
-                    Add Inflation Increase
-                </Button>
-                <Button
-                    className='account-upload-data-button'
-                    variant="contained" 
-                    sx={{background: "#041F4C"}}
-                    onClick={onAddPercentageIncreaseClick}
-                >
-                    Add Simple Percentage Increase
-                </Button>
-            </div> */}
-            
-            <CompPlanningTable appliedAdjustments={appliedAdjustments} data={sample_data}/>
-            {appliedAdjustments.length > 0 && 
+               
+            {compensationState.budgetLoadState === LoadState.LOADED && 
+                <>
+                <CompPlanningTable 
+                    data={compPlanningData}
+                /> 
                 <div className='comp-planning-export'>
                     <Button
                         className='comp-planning-export-button'
@@ -280,7 +289,27 @@ export default function BudgetLayout() {
                         Export to CSV
                     </Button>
                 </div>
+                </>
             }
+
+            {compensationState.budgetLoadState === LoadState.ERROR && 
+                <p>
+                    Error loading employee compensation data
+                </p>
+            }
+            
+            
+            
+
+            <ColorRing
+                visible={compensationState.budgetLoadState === LoadState.LOADING }
+                height="80"
+                width="80"
+                ariaLabel="blocks-loading"
+                wrapperStyle={{}}
+                wrapperClass="blocks-wrapper"
+                colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+            />
         </div>
     );
 }

@@ -127,6 +127,14 @@ export interface BudgetData {
     managerName?: string,
 }
 
+export interface CompPlanningData extends BudgetData {
+    meritIncreasePercent?: number,
+    meritIncreaseDollar?: number,
+    marketIncreasePercent?: number,
+    marketIncreaseDollar?: number,
+    newSalary?: number,
+}
+
 export interface CompAdjustment {
     percentage: number,
     dollarAmt: number,
@@ -137,6 +145,20 @@ export interface AppliedAdjustment {
     dataKey: string,
     adjustmentsByEmail: {[key: string]: CompAdjustment},
 };
+
+export type MarketAdjusterFunction = (cpd: CompPlanningData) => {marketIncreasePercent: number, marketIncreaseDollar: number};
+
+export interface MarketAdjuster {
+    description: string,
+    apply: MarketAdjusterFunction,
+}
+
+export type MeritAdjusterFunction = (cpd: CompPlanningData) => {meritIncreasePercent: number, meritIncreaseDollar: number};
+
+export interface MeritAdjuster {
+    description: string,
+    apply: MeritAdjusterFunction,
+}
 
 export interface MeritIncreaseSetting {
     scoreStart: number,

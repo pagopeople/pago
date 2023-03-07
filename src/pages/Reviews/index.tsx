@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import ReviewCard from '../../components/ReviewCard';
 import { BsFillPlusCircleFill } from 'react-icons/bs';
@@ -14,21 +14,12 @@ export default function Reviews() {
     const dispatch = useAppDispatch();
     const reviewsState = useAppSelector(state => state.reviewsState);
     const sessionState = useAppSelector(state => state.sessionState);
-    const [shouldNavigate, setShouldNavigate] = useState(false);
     
     useEffect(() => {
         if (sessionState.loadState === LoadState.LOADED && reviewsState.loadState === LoadState.INIT) {
             dispatch(getReviewsAsync())
         }
-    }, [sessionState.loadState])
-    
-    // useEffect(() => {
-    //     if (reviewsState.activeReview !== undefined && shouldNavigate) {
-    //         navigate("/review")
-    //     } else {
-    //         setShouldNavigate(true);
-    //     }
-    // }, [reviewsState.activeReview]);
+    }, [sessionState.loadState, dispatch, reviewsState.loadState])
 
     const onAddReviewClick = () => {
         dispatch(startNewReview('endproj'));
@@ -38,10 +29,6 @@ export default function Reviews() {
     const onAddMidProjReviewClick = () => {
         dispatch(startNewReview('midproj'));
         navigate("/review");
-    }
-
-    const onReviewClick = () => {
-        
     }
 
     return(

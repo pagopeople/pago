@@ -1,15 +1,14 @@
-import React, { ChangeEvent, ChangeEventHandler, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { ColorRing } from 'react-loader-spinner';
 import { InviteUserRequest } from '../../apiTypes';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { getUsersAsync, inviteUserAsync, setInviteUserLoadState } from '../../reducers/UsersSlice';
+import { getUsersAsync, inviteUserAsync, setInviteUserLoadState, uploadOrgDataAsync } from '../../reducers/UsersSlice';
 import { LoadState, Role, User } from '../../types';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 
 import './Account.css';
 import { getRolesAsList } from '../../utils';
-import { getUploadUrlAsync, uploadCompDataAsync } from '../../reducers/CompensationSlice';
-import { useFilePicker } from 'use-file-picker';
+import { uploadCompDataAsync } from '../../reducers/CompensationSlice';
 
 const customStyles = {
     content: {
@@ -51,7 +50,7 @@ export default function Account() {
         if (usersState.loadState === LoadState.INIT) {
             dispatch(getUsersAsync());
         }
-    }, [usersState.loadState]);
+    }, [usersState.loadState, dispatch]);
 
     const renderUser = (user: User) => {
         return (
@@ -123,6 +122,12 @@ export default function Account() {
         }
     }
 
+    const onUploadOrgClick = () => {
+        if (file) {
+            dispatch(uploadOrgDataAsync(file));
+        }
+    }
+
     const onFileSelect = (e: ChangeEvent<HTMLInputElement> ) => {
         if (e.target.files) {
             setFile(e.target.files[0]);
@@ -170,6 +175,7 @@ export default function Account() {
                     className='account-upload-data-button'
                     variant="contained" 
                     sx={{background: "#041F4C"}}
+                    onClick={onUploadOrgClick}
                 >
                     Upload org chart data
                 </Button>

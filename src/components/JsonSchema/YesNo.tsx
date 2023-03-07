@@ -1,5 +1,4 @@
 import React from 'react';
-import { useState } from 'react';
 import { FormLabel } from '@mui/material';
 
 import './YesNo.css';
@@ -15,8 +14,6 @@ interface YesNoProps {
 
 export const YesNo: React.FC<YesNoProps> = (props) => {
     const {
-        startHint,
-        endHint,
         updateValue,
         value,
         title,

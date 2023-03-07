@@ -9,7 +9,6 @@ import {
     IoRocketSharp, 
     IoPerson,
 } from 'react-icons/io5';
-import { GrGrow } from 'react-icons/gr';
 import { GiOnTarget } from 'react-icons/gi';
 import { MdOutlineReviews } from 'react-icons/md';
 

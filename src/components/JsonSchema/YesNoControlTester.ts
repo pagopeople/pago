@@ -1,4 +1,4 @@
-import { rankWith, schemaTypeIs, scopeEndsWith, uiTypeIs } from '@jsonforms/core';
+import { rankWith, schemaTypeIs } from '@jsonforms/core';
 
 export default rankWith(
   3, //increase rank as needed

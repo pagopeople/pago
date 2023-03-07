@@ -1,9 +1,9 @@
-import React, {useState, ChangeEvent, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { LoadState, ProjectSize, Review } from '../../types';
+import { LoadState, Review } from '../../types';
 
 import './DirectReportReviewEdit.css';
-import { getReviewsAsync, getPeerReviewWithIdAsync, resetActiveReviewState, submitReviewAsync, submitPeerReviewAsync } from '../../reducers/ReviewsSlice';
+import { getReviewsAsync, getPeerReviewWithIdAsync, resetActiveReviewState, submitPeerReviewAsync } from '../../reducers/ReviewsSlice';
 import { useParams } from 'react-router-dom';
 import { ColorRing } from 'react-loader-spinner';
 import ReviewForm from '../../components/ReviewForm';
@@ -17,9 +17,6 @@ export default function DirectReportReviewEdit() {
     const [review, setReviewHook] = useState<Review | undefined>(reviewsState.activeReview);
     
     const setReview = (review: Review) => {
-        // if (JSON.stringify(review) === JSON.stringify({schemaId: 'manager'})) {
-        //     return;
-        // }
         setReviewHook(review);
     }
 
@@ -27,7 +24,7 @@ export default function DirectReportReviewEdit() {
         return function cleanup() {
             dispatch(resetActiveReviewState());
         }
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         if (sessionState.loadState === LoadState.LOADED && 
@@ -36,28 +33,13 @@ export default function DirectReportReviewEdit() {
         } else if (reviewsState.activeReviewLoadState === LoadState.LOADED) {
             setReview(reviewsState.activeReview!);
         }
-    }, [sessionState.loadState, reviewsState.activeReviewLoadState]);
+    }, [sessionState.loadState, reviewsState.activeReviewLoadState, dispatch]);
 
     useEffect(() => {
         if (reviewsState.submitReviewLoadState === LoadState.LOADED) {
             dispatch(getReviewsAsync())
         }
-    }, [reviewsState.submitReviewLoadState]);
-    
-    const getProjectSizeOptions = () => {
-        const options:React.ReactNode[] = [];
-        for (const ps in ProjectSize) {
-            if (isNaN(Number(ps))) {
-                continue;
-            }
-            options.push(<option key={ps} value={ps}>{ProjectSize[ps]}</option>)
-        }
-        return options;
-    };
-
-    const changeEventHandler = (callback: (val: string) => void) => {
-        return (evt: ChangeEvent<HTMLInputElement>) => callback(evt.currentTarget.value);
-    }
+    }, [reviewsState.submitReviewLoadState, dispatch]);
 
     const onSubmitPeerReview = () => {
         dispatch(submitPeerReviewAsync(review || {}));

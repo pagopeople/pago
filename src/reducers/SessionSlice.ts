@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { AuthCodeExchangeResponse, AuthState, ExchangeCodeRequest, LoadState, ThunkApiType, User } from '../types';
-import SessionService from '../api/SessionService';
-import { CognitoIdToken, CognitoAccessToken } from 'amazon-cognito-identity-js';
+import { CognitoIdToken,  } from 'amazon-cognito-identity-js';
 
 
 interface SessionState {

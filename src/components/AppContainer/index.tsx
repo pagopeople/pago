@@ -7,7 +7,6 @@ import { getConfigAsync } from '../../reducers/ConfigSlice';
 import { ColorRing } from 'react-loader-spinner';
 import {
 	CognitoUserPool,
-	CognitoUserAttribute,
 	CognitoUser,
     CognitoUserSession,
     CognitoIdToken,
@@ -15,7 +14,6 @@ import {
     CognitoRefreshToken,
 } from 'amazon-cognito-identity-js';
 import { exchangeCodeForTokenAsync, updateUserFromCachedSession, setAuthState } from '../../reducers/SessionSlice';
-import { getAuthRedirectUrl } from '../../utils';
 
 export default function AppContainer() {
     const dispatch = useAppDispatch();
@@ -37,7 +35,7 @@ export default function AppContainer() {
             userPoolRef.current = new CognitoUserPool(poolData);
             loadSession();   
         }
-    }, [configState.loadState]);
+    }, [configState.loadState, dispatch, configState.config?.userPoolId, configState.config?.userPoolClientId]);
 
     useEffect(() => {
         if (sessionState.loadState === LoadState.LOADED) {

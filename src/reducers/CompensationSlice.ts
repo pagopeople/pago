@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { ApiUser, GetBudgetDataResponse, GetCompDataResponse, InviteUserRequest, PresignedUrl } from '../apiTypes';
-import { BudgetData, Config, LoadState, ThunkApiType, User } from '../types';
+import { GetBudgetDataResponse, GetCompDataResponse } from '../apiTypes';
+import { BudgetData, LoadState, ThunkApiType } from '../types';
 
 
 interface CompensationState {

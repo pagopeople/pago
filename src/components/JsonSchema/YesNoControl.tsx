@@ -11,9 +11,6 @@ interface YesNoProps {
 const RatingControl = (props: OwnPropsOfControl & YesNoProps & {readOnly?: boolean}) => {
   const { data, handleChange, path, enabled } = props;
 
-  const getOptions = (start: number = 1, end: number = 10) => {
-    return Array.from(Array(end - start + 1).keys()).map(x => x + start)
-  }
   return(
     <YesNo
         value={data}
@@ -21,16 +18,6 @@ const RatingControl = (props: OwnPropsOfControl & YesNoProps & {readOnly?: boole
         title={props.uischema?.label === undefined ? props.schema?.title : `${props.uischema.label}`}
         enabled={enabled}
     />
-    // <NumberRating
-    //   value={data}
-    //   updateValue={(newValue: number) => handleChange(path, newValue)}
-    //   maxVal={props.schema?.maximum}
-    //   options={getOptions(props.schema?.minimum, props.schema?.maximum)}
-    //   startHint={props.uischema?.options?.startHint}
-    //   endHint={props.uischema?.options?.endHint}
-    //   title={props.uischema?.label === undefined ? props.schema?.title : `${props.uischema.label}`}
-    //   enabled={enabled}
-    // />
   );
 };
 

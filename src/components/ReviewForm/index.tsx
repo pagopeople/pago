@@ -1,5 +1,5 @@
 import { JsonForms } from '@jsonforms/react';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import SchemaFetcher from '../../reviewSchemas/SchemaFetcher';
 import {
     materialCells,
@@ -53,7 +53,7 @@ export default function ReviewForm(props: Props) {
         mp[fieldName] = element;
       }
       return mp
-    }, {}), []);
+    }, {}), [cultureUiSchema.elements]);
 
   const [didAddRandomCultureQuestions, setDidAddRandomCultureQuestions ] = useState(false);
   const [addedCultureQuestions, setAddedCultureQuestions] = useState<Set<string>>(new Set());
@@ -88,7 +88,7 @@ export default function ReviewForm(props: Props) {
     // Mainly for when coming to view a completed review. We do not want to add
     // random culture questions we want to add the ones they answered.
     const cultureFieldNames = Object.keys(cultureFieldNamesMap);
-    Object.keys(data).map((field) => {
+    Object.keys(data).forEach((field) => {
       if (cultureFieldNames.indexOf(field) >= 0 && !addedCultureQuestions.has(field)) {
         s.elements.push(cultureFieldNamesMap[field]);
         addedCultureQuestions.add('field');

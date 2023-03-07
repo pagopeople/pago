@@ -2,7 +2,6 @@ import React from 'react';
 import DataPointDescriptive from '../../components/DataPointDescriptive';
 import HomeWidget from '../../components/HomeWidget';
 import ProgressBar from '../../components/ProgressBar';
-import ProgressBarDescriptive from '../../components/ProgressBarDescriptive';
 import ProgressCircle from '../../components/ProgressCircle';
 
 import './EmployeeDashboard.css';

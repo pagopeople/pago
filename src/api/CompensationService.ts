@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from "axios";
-import { InviteUserRequest, PresignedUrl } from "../apiTypes";
+import { PresignedUrl } from "../apiTypes";
 import { $Service } from "./Service";
 
 

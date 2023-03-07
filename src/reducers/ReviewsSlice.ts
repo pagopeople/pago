@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { PagoApi } from '../api/PagoApi';
 import { RootState } from '../store';
-import { Config, LoadState, Review, ThunkApiType } from '../types';
+import { LoadState, Review, ThunkApiType } from '../types';
 
 
 interface ReviewsState {

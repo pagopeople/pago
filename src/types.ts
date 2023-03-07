@@ -1,4 +1,3 @@
-import { number } from "prop-types";
 import { PagoApi } from "./api/PagoApi";
 import { RootState } from "./store";
 

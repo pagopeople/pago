@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { NavLink, Outlet, useLocation, Link } from 'react-router-dom';
+import React from 'react';
+import { NavLink, useLocation, Link } from 'react-router-dom';
 import Search from '../Search';
 import { GiOnTarget } from 'react-icons/gi';
 import { MdOutlineReviews } from 'react-icons/md';

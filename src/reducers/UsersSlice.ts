@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { ApiUser, InviteUserRequest } from '../apiTypes';
-import { Config, LoadState, ThunkApiType, User } from '../types';
+import { LoadState, ThunkApiType, User } from '../types';
 
 
 interface UsersState {
@@ -32,6 +32,16 @@ export const inviteUserAsync = createAsyncThunk<void, InviteUserRequest, ThunkAp
       const response = await thunkApi.extra.api(state).userService.inviteUser(req);
       return response;
     }
+);
+
+export const uploadOrgDataAsync = createAsyncThunk<void, File, ThunkApiType>(
+  'usersState/uploadOrgData',
+  async (fileToUpload, thunkApi) => {
+    const state = thunkApi.getState();
+    const response = await thunkApi.extra.api(state).userService.getUploadUrl();
+    const s3Response = await thunkApi.extra.api(state).userService.uploadToS3(fileToUpload, response);
+    return s3Response;
+  }
 );
 
 export const usersSlice = createSlice({

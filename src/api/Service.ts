@@ -1,7 +1,9 @@
+import { RequestHandler } from "./RequestHandler";
+
 export class $Service {
     protected client;
 
-    constructor(requestHandler: any) {
+    constructor(requestHandler: RequestHandler) {
         this.client = requestHandler;
     }
 }

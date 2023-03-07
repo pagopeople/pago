@@ -1,5 +1,4 @@
 import React from 'react';
-import { useState } from 'react';
 import { FormLabel } from '@mui/material';
 
 import './NumberRating.css';

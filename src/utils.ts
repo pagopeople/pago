@@ -1,4 +1,3 @@
-import { EnumType } from "typescript"
 import { Role } from "./types"
 
 const isLocalHost = (url: string) => {

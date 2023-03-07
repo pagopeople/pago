@@ -1,4 +1,3 @@
-import { Review } from '../types';
 import { $Service } from './Service';
 
 

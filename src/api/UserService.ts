@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from "axios";
-import { InviteUserRequest, PresignedUrl } from "../apiTypes";
+import { InviteUserRequest, PresignedUrl, UpdateUserRequest } from "../apiTypes";
 import { $Service } from "./Service";
 
 
@@ -11,6 +11,10 @@ export default class UserService extends $Service {
 
     inviteUser(request: InviteUserRequest) {
         return this.client.post("/users", request);
+    }
+
+    updateUser(request: UpdateUserRequest) {
+        return this.client.post(`/users/${request.userName}`, request);
     }
 
     getUploadUrl() {

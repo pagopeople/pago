@@ -20,6 +20,12 @@ export interface InviteUserRequest {
     tenantId?: string,
 }
 
+export interface UpdateUserRequest {
+    userName: string,
+    email?: string,
+    userRole?: string,
+}
+
 export interface PresignedUrl {
     fields: {
         "AWSAccessKeyId": string,

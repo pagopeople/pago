@@ -23,5 +23,5 @@ export const getAuthRedirectUrl = (href: string) => {
 }
 
 export const getRolesAsList = () => {
-    return (Object.keys(Role) as Array<keyof typeof Role>).filter(k => typeof k !== 'number') 
+    return (Object.keys(Role) as Array<keyof typeof Role>).filter(k => typeof k !== 'number' && k !== 'SystemAdmin') 
 }

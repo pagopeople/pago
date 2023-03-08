@@ -34,6 +34,7 @@ export interface User {
 export enum Role {
     SystemAdmin = "SystemAdmin",
     TenantAdmin = "TenantAdmin",
+    Manager = "Manager",
     TenantUser = "TenantUser",
 }
 

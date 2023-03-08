@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { ApiUser, InviteUserRequest } from '../apiTypes';
+import { ApiUser, InviteUserRequest, UpdateUserRequest } from '../apiTypes';
 import { LoadState, ThunkApiType, User } from '../types';
 
 
@@ -33,6 +33,15 @@ export const inviteUserAsync = createAsyncThunk<void, InviteUserRequest, ThunkAp
       return response;
     }
 );
+
+export const updateUserAsync = createAsyncThunk<void, UpdateUserRequest, ThunkApiType>(
+  'usersState/updateUser',
+  async(req, thunkApi) => {
+    const state = thunkApi.getState();
+    const resp = await thunkApi.extra.api(state).userService.updateUser(req);
+    return resp;
+  }
+)
 
 export const uploadOrgDataAsync = createAsyncThunk<void, File, ThunkApiType>(
   'usersState/uploadOrgData',
@@ -81,6 +90,15 @@ export const usersSlice = createSlice({
             state.inviteUserLoadState = LoadState.LOADED;
           })
           .addCase(inviteUserAsync.rejected, (state, action) => {
+            state.inviteUserLoadState = LoadState.ERROR;
+          })
+          .addCase(updateUserAsync.pending, (state) => {
+            state.inviteUserLoadState = LoadState.LOADING;
+          })
+          .addCase(updateUserAsync.fulfilled, (state, action) => {
+            state.inviteUserLoadState = LoadState.LOADED;
+          })
+          .addCase(updateUserAsync.rejected, (state, action) => {
             state.inviteUserLoadState = LoadState.ERROR;
           })
       },

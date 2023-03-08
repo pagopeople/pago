@@ -1,14 +1,15 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { ColorRing } from 'react-loader-spinner';
-import { InviteUserRequest } from '../../apiTypes';
+import { InviteUserRequest, UpdateUserRequest } from '../../apiTypes';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { getUsersAsync, inviteUserAsync, setInviteUserLoadState, uploadOrgDataAsync } from '../../reducers/UsersSlice';
+import { getUsersAsync, inviteUserAsync, setInviteUserLoadState, updateUserAsync, uploadOrgDataAsync } from '../../reducers/UsersSlice';
 import { LoadState, Role, User } from '../../types';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 
 import './Account.css';
 import { getRolesAsList } from '../../utils';
 import { uploadCompDataAsync } from '../../reducers/CompensationSlice';
+import { validate } from '@jsonforms/core';
 
 const customStyles = {
     content: {
@@ -43,7 +44,9 @@ export default function Account() {
     const [isInviteUsersModalOpen, setisInviteUsersModalOpen] = useState(false);
     const [inviteUserRequest, setInviteUserRequest] = useState<InviteUserRequest>({role: Role.TenantUser});
     const  [validation, setValidation] = useState<InviteUserRequestValidation>(defaultInviteUserRequestValidation);
-    const [file, setFile] = useState<File | null>(null)
+    const [file, setFile] = useState<File | null>(null);
+    const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
+    const [isUpdateUserModalOpen, setIsUpdateUserModalOpen] = useState(false);
 
 
     useEffect(() => {
@@ -59,19 +62,26 @@ export default function Account() {
                     {user.givenName} {user.familyName}
                 </div>
                 <div className=''>{user.role}</div>
+                <Button
+                    className='account-edit-user-button'
+                    onClick={() => {setIsUpdateUserModalOpen(true); setSelectedUser({...user});}}
+                >
+                    Edit
+                </Button>
             </div>
         )
     }
 
     const onInviteClick = () => {
-        console.log("Invite clicked")
         setisInviteUsersModalOpen(true);
     }
 
     const onCloseModalClick = () => {
         dispatch(setInviteUserLoadState(LoadState.INIT));
         setisInviteUsersModalOpen(false);
+        setIsUpdateUserModalOpen(false);
         setInviteUserRequest({});
+        setSelectedUser(undefined);
     }
 
     const validateInviteUserRequest = () => {
@@ -103,17 +113,30 @@ export default function Account() {
 
     const onRoleUpdate = (e: SelectChangeEvent<Role>) => {
         const val = e.target.value as keyof typeof Role;
-        setInviteUserRequest({...inviteUserRequest, role: Role[val]})
+        setInviteUserRequest({...inviteUserRequest, role: Role[val]});
+        setSelectedUser({...selectedUser, role: Role[val]});
     }
 
     const onSendInviteClick = () => {
         if (validateInviteUserRequest()) {
             inviteUserRequest.userName = inviteUserRequest.email;
-            console.log('dispatch with ', inviteUserRequest);
             dispatch(inviteUserAsync(inviteUserRequest));
         } else {
             console.log('not valid');
         }
+    }
+
+    const onSendUpdateClick = () => {
+        if (selectedUser === undefined) {
+            return;
+        }
+        const updateUserRequest: UpdateUserRequest = {
+            userName: selectedUser.username!,
+            email: selectedUser.email,
+            userRole: selectedUser.role,
+        }
+        console.log('dispatching', updateUserRequest);
+        dispatch(updateUserAsync(updateUserRequest));
     }
 
     const onUploadCompClick = () => {
@@ -265,6 +288,89 @@ export default function Account() {
                 <DialogActions>
                     <Button onClick={onCloseModalClick}>Cancel</Button>
                     <Button onClick={onSendInviteClick}>Invite</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={isUpdateUserModalOpen}
+                onClose={onCloseModalClick}
+           
+            >
+                <DialogTitle>Update user</DialogTitle>
+                <DialogContent>
+                    {/* <DialogContentText>
+                        To subscribe to this website, please enter your email address here. We
+                        will send updates occasionally.
+                    </DialogContentText> */}
+                    <ColorRing
+                        visible={usersState.inviteUserLoadState === LoadState.LOADING}
+                        height="80"
+                        width="80"
+                        ariaLabel="blocks-loading"
+                        wrapperStyle={{}}
+                        wrapperClass="blocks-wrapper"
+                        colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+                    />
+                    {usersState.inviteUserLoadState === LoadState.LOADED && "Success"}
+                    {usersState.inviteUserLoadState === LoadState.ERROR && "Error"}
+                    <FormControl>
+                    <TextField
+                        required
+                        autoFocus
+                        error={!validation.firstName}
+                        margin="dense"
+                        id="firstName"
+                        label="First name"
+                        fullWidth
+                        variant="standard"
+                        helperText={!validation.firstName && "First name is required"}
+                        value={selectedUser?.givenName}
+                        onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {setSelectedUser({...selectedUser, givenName: e.target.value})}}
+                    />
+                    <TextField
+                        required
+                        error={!validation.lastName}
+                        margin="dense"
+                        id="lastName"
+                        label="Last name"
+                        fullWidth
+                        variant="standard"
+                        helperText={!validation.lastName && "Last name is required"}
+                        value={selectedUser?.familyName}
+                        onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {setSelectedUser({...selectedUser, familyName: e.target.value})}}
+                    />
+                    <TextField
+                        required
+                        error={!validation.email}
+                        margin="dense"
+                        id="email"
+                        label="Email Address"
+                        type="email"
+                        fullWidth
+                        variant="standard"
+                        helperText={!validation.email && "Email is required"}
+                        value={selectedUser?.email}
+                        onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {setSelectedUser({...selectedUser, email: e.target.value})}}
+                    />
+                    {/* <InputLabel id="user-role-dropdown">Role</InputLabel> */}
+                    <Select
+                        required
+                        error={!validation.role}
+                        labelId="user-role-dropdown"
+                        id="user-role-dropdown"
+                        value={selectedUser?.role}
+                        label="Role"
+                        onChange={onRoleUpdate}
+                    >
+                        {getRolesAsList().map(role => 
+                            <MenuItem value={role}>{role}</MenuItem>
+                        )}
+                    </Select>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={onCloseModalClick}>Cancel</Button>
+                    <Button onClick={onSendUpdateClick}>Update</Button>
                 </DialogActions>
             </Dialog>
         </div>
